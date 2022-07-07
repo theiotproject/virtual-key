@@ -14,6 +14,7 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
       r'^[a-zA-Z0-9]{8}\-[a-zA-Z0-9]{4}\-[a-zA-Z0-9]{4}\-[a-zA-Z0-9]{4}\-[a-zA-Z0-9]{12}$');
   String qrTextData = "";
   String textMsg = "";
+  bool showQr = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +27,7 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-            QrImage(
-              data: qrTextData,
-              size: 200,
-              backgroundColor: Colors.white,
-            ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             SizedBox(
               width: 350,
               child: TextField(
@@ -53,10 +48,12 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
                   setState(() {
                     qrTextData = qrDataController.text;
                     textMsg = 'Code accepted';
+                    showQr = true;
                   });
                 } else {
                   setState(() {
                     textMsg = 'This is not a valid code';
+                    showQr = false;
                   });
                 }
               },
@@ -66,6 +63,15 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
               child: const Text('Generate emergency key'),
             ),
             Text(textMsg),
+            const SizedBox(height: 10),
+            Visibility(
+              visible: showQr,
+              child: QrImage(
+                data: qrTextData,
+                size: 200,
+                backgroundColor: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
