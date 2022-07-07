@@ -12,10 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Virtual Key',
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
-        backgroundColor: Colors.grey,
+        scaffoldBackgroundColor: Colors.grey,
       ),
       initialRoute: '/',
       routes: {

@@ -12,7 +12,6 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
   final qrDataController = TextEditingController();
   final guidRegExp = RegExp(
       r'^[a-zA-Z0-9]{8}\-[a-zA-Z0-9]{4}\-[a-zA-Z0-9]{4}\-[a-zA-Z0-9]{4}\-[a-zA-Z0-9]{12}$');
-  // final guidRegExp = RegExp(r'^[a-zA-Z0-9]+$');
   String qrTextData = "";
   String textMsg = "";
 
@@ -27,19 +26,27 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 10),
             QrImage(
               data: qrTextData,
               size: 200,
               backgroundColor: Colors.white,
             ),
-            TextField(
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 350,
+              child: TextField(
                 controller: qrDataController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Type your code here',
+                  labelStyle: TextStyle(color: Colors.black),
                   hintText: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
                 ),
-                textInputAction: TextInputAction.done),
+                textInputAction: TextInputAction.done,
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
                 if (guidRegExp.hasMatch(qrDataController.text)) {
@@ -53,6 +60,9 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
                   });
                 }
               },
+              style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20),
+              ),
               child: const Text('Generate emergency key'),
             ),
             Text(textMsg),
