@@ -10,11 +10,23 @@ class Home extends StatelessWidget {
         title: const Text('Home Page'),
       ),
       body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/emergency_open');
-            },
-            child: const Text('Emergency lock opening')),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: const Text('Log In'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/emergency_open');
+              },
+              child: const Text('Emergency lock opening'),
+            ),
+          ],
+        ),
       ),
     );
   }
