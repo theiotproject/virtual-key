@@ -45,19 +45,22 @@ class _UserGatesState extends State<UserGates> {
             padding: const EdgeInsets.all(16),
             itemCount: gates?.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(
-                  gates![index].title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+              return Card(
+                child: ListTile(
+                  title: Text(
+                    gates![index].title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/gate_key',
+                        arguments: {"id": gates![index].id.toString()});
+                  },
                 ),
-                onTap: () {
-                  Navigator.pushNamed(context, '/gate_key');
-                },
               );
             }),
       ),
