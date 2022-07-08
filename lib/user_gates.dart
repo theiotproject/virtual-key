@@ -45,8 +45,8 @@ class _UserGatesState extends State<UserGates> {
             padding: const EdgeInsets.all(16),
             itemCount: gates?.length,
             itemBuilder: (context, index) {
-              return Container(
-                child: Text(
+              return ListTile(
+                title: Text(
                   gates![index].title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -55,6 +55,9 @@ class _UserGatesState extends State<UserGates> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                onTap: () {
+                  Navigator.pushNamed(context, '/gate_key');
+                },
               );
             }),
       ),

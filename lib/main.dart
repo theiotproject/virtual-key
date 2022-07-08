@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/emergency_open.dart';
+import 'package:virtual_key/gate_key.dart';
 import 'package:virtual_key/home.dart';
 import 'package:virtual_key/login.dart';
 import 'package:virtual_key/user_gates.dart';
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const Home(),
         '/emergency_open': (context) => const EmergencyOpen(),
         '/login': (context) => const Login(),
-        '/user_gates': (context) => const UserGates()
+        '/user_gates': (context) => const UserGates(),
+        '/gate_key': (context) => const GateKey()
       },
     );
   }
