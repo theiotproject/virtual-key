@@ -25,6 +25,12 @@ class Home extends StatelessWidget {
               },
               child: const Text('Emergency lock opening'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/user_gates');
+              },
+              child: const Text('View your gates'),
+            ),
           ],
         ),
       ),
