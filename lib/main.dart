@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/emergency_open.dart';
 import 'package:virtual_key/home.dart';
+import 'package:virtual_key/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/emergency_open': (context) => const EmergencyOpen()
+        '/emergency_open': (context) => const EmergencyOpen(),
+        '/login': (context) => const Login()
       },
     );
   }
