@@ -9,7 +9,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
-  String password = '';
+  final passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
   @override
@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
             ElevatedButton(
               onPressed: () {
                 print('Email: ${emailController.text}');
-                print('Pass: ${password}');
+                print('Pass: ${passwordController.text}');
               },
               child: const Text('Submit'),
             ),
@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
       );
 
   Widget buildPassword() => TextField(
-        onChanged: (value) => setState(() => password = value),
+        controller: passwordController,
         decoration: InputDecoration(
           labelText: 'Password',
           hintText: 'Your password',
