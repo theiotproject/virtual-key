@@ -27,9 +27,9 @@ class Home extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/user_gates');
+                Navigator.pushNamed(context, '/user_teams');
               },
-              child: const Text('View your gates'),
+              child: const Text('View your teams'),
             ),
           ],
         ),
