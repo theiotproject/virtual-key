@@ -16,8 +16,6 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
-  User? user;
-
   @override
   void initState() {
     super.initState();

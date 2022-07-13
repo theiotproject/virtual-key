@@ -35,11 +35,16 @@ class RemoteService {
     }
   }
 
-  Future<List<Team>?> getTeams() async {
+  Future<List<Team>?> getTeams(userId) async {
     http.Client client = http.Client();
 
-    Uri uri = Uri.parse('http://keymanager.theiotproject.com/api/team');
-    http.Response response = await client.get(uri);
+    Uri uri = Uri.parse(
+        'http://keymanager.theiotproject.com/api/user/${userId}/teams');
+    http.Response response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
 
     if (response.statusCode == 200) {
       String json = response.body;
