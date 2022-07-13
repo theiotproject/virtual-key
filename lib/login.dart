@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:http/http.dart' as http;
-import 'package:virtual_key/models/user.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -14,7 +13,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool isPasswordVisible = false;
+  bool isPasswordHidden = true;
 
   @override
   void initState() {
@@ -47,6 +46,9 @@ class _LoginState extends State<Login> {
                 user = await RemoteService().getUser();
                 if (user != null) {
                   print(user!.email);
+                  isLogged = true;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/user_hub', (_) => false);
                 }
               },
               child: const Text('Submit'),
@@ -80,16 +82,15 @@ class _LoginState extends State<Login> {
         decoration: InputDecoration(
           labelText: 'Password',
           hintText: 'Your password',
-          errorText: 'Password is invalid',
           suffixIcon: IconButton(
             onPressed: () =>
-                setState(() => isPasswordVisible = !isPasswordVisible),
-            icon: isPasswordVisible
+                setState(() => isPasswordHidden = !isPasswordHidden),
+            icon: isPasswordHidden
                 ? const Icon(Icons.visibility_off)
                 : const Icon(Icons.visibility),
           ),
           border: const OutlineInputBorder(),
         ),
-        obscureText: isPasswordVisible,
+        obscureText: isPasswordHidden,
       );
 }

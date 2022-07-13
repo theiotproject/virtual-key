@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/globals.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class UserHub extends StatelessWidget {
+  const UserHub({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Hub'),
       ),
       body: Center(
         child: Column(
@@ -15,15 +16,25 @@ class Home extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/user_teams');
               },
-              child: const Text('Log In'),
+              child: const Text('View your teams'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/emergency_open');
               },
               child: const Text('Emergency lock opening'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                isLogged = false;
+                token = null;
+                user = null;
+
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+              },
+              child: const Text('Log Out'),
             ),
           ],
         ),
