@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/services/remote_service.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -34,9 +36,14 @@ class _LoginState extends State<Login> {
             buildPassword(),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 print('Email: ${emailController.text}');
                 print('Pass: ${passwordController.text}');
+
+                http.Response response = await RemoteService().login(
+                    emailController.text, passwordController.text, "phonename");
+
+                print(response.body);
               },
               child: const Text('Submit'),
             ),

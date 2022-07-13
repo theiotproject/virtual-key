@@ -1,18 +1,31 @@
+import 'dart:convert';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:http/http.dart' as http;
 
 class RemoteService {
+  Future<http.Response> login(String email, String password, String device) {
+    return http.post(
+      Uri.parse('http://keymanager.theiotproject.com/api/sanctum/token'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+        'device_name': device
+      }),
+    );
+  }
+
   Future<List<Team>?> getTeams() async {
     http.Client client = http.Client();
 
-    Uri uri =
-        Uri.parse('https://mocki.io/v1/455fb9ac-6f70-4792-8d4c-67c9452d7514');
+    Uri uri = Uri.parse('http://keymanager.theiotproject.com/api/team');
     http.Response response = await client.get(uri);
 
     if (response.statusCode == 200) {
       String json = response.body;
-
       return teamFromJson(json);
     }
   }
