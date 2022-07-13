@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/services/remote_service.dart';
+import 'package:virtual_key/globals.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/models/user.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
+
+  User? user;
 
   @override
   void initState() {
@@ -37,13 +41,15 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                print('Email: ${emailController.text}');
-                print('Pass: ${passwordController.text}');
-
                 http.Response response = await RemoteService().login(
                     emailController.text, passwordController.text, "phonename");
 
-                print(response.body);
+                token = response.body;
+
+                user = await RemoteService().getUser();
+                if (user != null) {
+                  print(user!.email);
+                }
               },
               child: const Text('Submit'),
             ),

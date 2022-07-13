@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:virtual_key/globals.dart';
+import 'package:virtual_key/models/user.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +18,21 @@ class RemoteService {
         'device_name': device
       }),
     );
+  }
+
+  Future<User?> getUser() async {
+    http.Client client = http.Client();
+
+    Uri uri = Uri.parse('http://keymanager.theiotproject.com/api/user');
+    http.Response response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      String json = response.body;
+      return userFromJson(json);
+    }
   }
 
   Future<List<Team>?> getTeams() async {
