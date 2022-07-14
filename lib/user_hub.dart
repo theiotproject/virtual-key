@@ -1,43 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/emergency_open.dart';
+import 'package:virtual_key/user_teams.dart';
 import 'package:virtual_key/globals.dart';
 
-class UserHub extends StatelessWidget {
+class UserHub extends StatefulWidget {
   const UserHub({Key? key}) : super(key: key);
+
+  @override
+  State<UserHub> createState() => _UserHubState();
+}
+
+class _UserHubState extends State<UserHub> {
+  int currentIndex = 1;
+  final List<Widget> children = const [EmergencyOpen(), UserTeams()];
+
+  void onTappedBar(int index) {
+    setState(() {
+      if (index == 2) {
+        isLogged = false;
+        token = null;
+        user = null;
+        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+      } else {
+        currentIndex = index;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hub'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/user_teams');
-              },
-              child: const Text('View your teams'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/emergency_open');
-              },
-              child: const Text('Emergency lock opening'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                isLogged = false;
-                token = null;
-                user = null;
-
-                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-              },
-              child: const Text('Log Out'),
-            ),
-          ],
-        ),
+      body: children[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: onTappedBar,
+        currentIndex: currentIndex,
+        items: const [
+          BottomNavigationBarItem(
+            label: '',
+            icon: Icon(Icons.lock),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: Icon(Icons.key),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
     );
   }

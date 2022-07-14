@@ -13,13 +13,22 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final emailRegExp = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+  bool isEmailValid = true;
   bool isPasswordHidden = true;
+
+  String errorMsg = '';
 
   @override
   void initState() {
     super.initState();
 
-    emailController.addListener(() => setState(() {}));
+    emailController.addListener(() => setState(() {
+          isEmailValid = emailRegExp.hasMatch(emailController.text) ||
+              emailController.text.isEmpty;
+        }));
   }
 
   @override
@@ -45,13 +54,26 @@ class _LoginState extends State<Login> {
 
                 user = await RemoteService().getUser();
                 if (user != null) {
-                  print(user!.email);
                   isLogged = true;
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/user_hub', (_) => false);
+                } else {
+                  setState(() {
+                    errorMsg = 'User does not exist';
+                  });
                 }
               },
               child: const Text('Submit'),
+            ),
+            const SizedBox(height: 24),
+            Center(
+              child: Text(
+                errorMsg,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.red,
+                ),
+              ),
             ),
           ],
         ),
@@ -64,6 +86,7 @@ class _LoginState extends State<Login> {
         decoration: InputDecoration(
           labelText: 'Email',
           hintText: 'name@example.com',
+          errorText: isEmailValid ? null : 'Invalid email adress',
           prefixIcon: const Icon(Icons.mail),
           suffixIcon: emailController.text.isEmpty
               ? Container(width: 0)

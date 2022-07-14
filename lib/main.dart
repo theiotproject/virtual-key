@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Virtual Key',
       theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
-        scaffoldBackgroundColor: Colors.grey,
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.blueGrey.shade50,
       ),
       initialRoute: '/',
       routes: {
