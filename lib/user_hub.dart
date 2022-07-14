@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_key/emergency_open.dart';
+import 'package:virtual_key/admin_gates.dart';
 import 'package:virtual_key/user_teams.dart';
 import 'package:virtual_key/globals.dart';
 
@@ -12,7 +12,7 @@ class UserHub extends StatefulWidget {
 
 class _UserHubState extends State<UserHub> {
   int currentIndex = 1;
-  final List<Widget> children = const [EmergencyOpen(), UserTeams()];
+  final List<Widget> children = const [AdminGates(), UserTeams()];
 
   void onTappedBar(int index) {
     setState(() {
