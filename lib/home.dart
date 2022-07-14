@@ -25,12 +25,6 @@ class Home extends StatelessWidget {
               },
               child: const Text('Emergency lock opening'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/user_teams');
-              },
-              child: const Text('View your teams'),
-            ),
           ],
         ),
       ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/services/remote_service.dart';
+import 'package:virtual_key/globals.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -9,14 +12,23 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
-  String password = '';
-  bool isPasswordVisible = false;
+  final passwordController = TextEditingController();
+  final emailRegExp = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+  bool isEmailValid = true;
+  bool isPasswordHidden = true;
+
+  String errorMsg = '';
 
   @override
   void initState() {
     super.initState();
 
-    emailController.addListener(() => setState(() {}));
+    emailController.addListener(() => setState(() {
+          isEmailValid = emailRegExp.hasMatch(emailController.text) ||
+              emailController.text.isEmpty;
+        }));
   }
 
   @override
@@ -34,11 +46,34 @@ class _LoginState extends State<Login> {
             buildPassword(),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                print('Email: ${emailController.text}');
-                print('Pass: ${password}');
+              onPressed: () async {
+                http.Response response = await RemoteService().login(
+                    emailController.text, passwordController.text, "phonename");
+
+                token = response.body;
+
+                user = await RemoteService().getUser();
+                if (user != null) {
+                  isLogged = true;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/user_hub', (_) => false);
+                } else {
+                  setState(() {
+                    errorMsg = 'User does not exist';
+                  });
+                }
               },
               child: const Text('Submit'),
+            ),
+            const SizedBox(height: 24),
+            Center(
+              child: Text(
+                errorMsg,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.red,
+                ),
+              ),
             ),
           ],
         ),
@@ -51,6 +86,7 @@ class _LoginState extends State<Login> {
         decoration: InputDecoration(
           labelText: 'Email',
           hintText: 'name@example.com',
+          errorText: isEmailValid ? null : 'Invalid email adress',
           prefixIcon: const Icon(Icons.mail),
           suffixIcon: emailController.text.isEmpty
               ? Container(width: 0)
@@ -65,20 +101,19 @@ class _LoginState extends State<Login> {
       );
 
   Widget buildPassword() => TextField(
-        onChanged: (value) => setState(() => password = value),
+        controller: passwordController,
         decoration: InputDecoration(
           labelText: 'Password',
           hintText: 'Your password',
-          errorText: 'Password is invalid',
           suffixIcon: IconButton(
             onPressed: () =>
-                setState(() => isPasswordVisible = !isPasswordVisible),
-            icon: isPasswordVisible
+                setState(() => isPasswordHidden = !isPasswordHidden),
+            icon: isPasswordHidden
                 ? const Icon(Icons.visibility_off)
                 : const Icon(Icons.visibility),
           ),
           border: const OutlineInputBorder(),
         ),
-        obscureText: isPasswordVisible,
+        obscureText: isPasswordHidden,
       );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
 
@@ -22,7 +23,7 @@ class _UserTeamsState extends State<UserTeams> {
   }
 
   getData() async {
-    teams = await RemoteService().getTeams();
+    teams = await RemoteService().getTeams(user!.id);
     if (teams != null) {
       setState(() {
         isLoaded = true;
