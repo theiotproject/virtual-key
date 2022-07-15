@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/globals.dart';
-import 'package:virtual_key/models/team.dart';
+import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 
 class AdminGates extends StatefulWidget {
@@ -11,10 +11,8 @@ class AdminGates extends StatefulWidget {
 }
 
 class _AdminGatesState extends State<AdminGates> {
-  List<Team>? teams;
+  List<Gate>? gates;
   bool isLoaded = false;
-
-  List<Team> adminTeams = [];
 
   @override
   void initState() {
@@ -25,17 +23,11 @@ class _AdminGatesState extends State<AdminGates> {
   }
 
   getData() async {
-    teams = await RemoteService().getTeams(user!.id);
+    gates = await RemoteService().getGates(adminTeamId);
 
-    if (teams != null) {
-      teams?.forEach((element) async {
-        bool isAdmin = await RemoteService().checkAdmin(element.id) == '1';
-        if (isAdmin) {
-          adminTeams.add(element);
-          setState(() {
-            isLoaded = true;
-          });
-        }
+    if (gates != null) {
+      setState(() {
+        isLoaded = true;
       });
     }
   }
@@ -53,12 +45,12 @@ class _AdminGatesState extends State<AdminGates> {
         ),
         child: ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: adminTeams.length,
+            itemCount: gates?.length,
             itemBuilder: (context, index) {
               return Card(
                 child: ListTile(
                   title: Text(
-                    adminTeams[index].name,
+                    gates![index].name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -67,8 +59,10 @@ class _AdminGatesState extends State<AdminGates> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/gate_key',
-                        arguments: {"id": teams![index].id.toString()});
+                    Navigator.pushNamed(context, '/gate_key', arguments: {
+                      "name": gates![index].name,
+                      "magic_code": gates![index].serialNumber
+                    });
                   },
                 ),
               );

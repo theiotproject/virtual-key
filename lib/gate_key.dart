@@ -9,11 +9,11 @@ class GateKey extends StatelessWidget {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gate name'),
+        title: Text(arguments['name']),
       ),
       body: Center(
         child: QrImage(
-          data: arguments['id'],
+          data: arguments['magic_code'],
           size: 200,
           backgroundColor: Colors.white,
         ),

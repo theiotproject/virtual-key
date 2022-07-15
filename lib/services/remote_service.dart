@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class RemoteService {
   Future<http.Response> login(String email, String password, String device) {
     return http.post(
-      Uri.parse('http://keymanager.theiotproject.com/api/sanctum/token'),
+      Uri.parse('http://keymanager.theiotproject.com/api/auth/token'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -39,7 +39,7 @@ class RemoteService {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'http://keymanager.theiotproject.com/api/user/${userId}/teams');
+        'http://keymanager.theiotproject.com/api/team/userId/${userId}');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -56,7 +56,7 @@ class RemoteService {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'http://keymanager.theiotproject.com/api/permission/${teamId}');
+        'http://keymanager.theiotproject.com/api/auth/permission/teamId/${teamId}');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -68,11 +68,16 @@ class RemoteService {
     }
   }
 
-  Future<List<Gate>?> getGates() async {
+  Future<List<Gate>?> getGates(teamId) async {
     http.Client client = http.Client();
 
-    Uri uri = Uri.parse('https://jsonplaceholder.typicode.com/posts');
-    http.Response response = await client.get(uri);
+    Uri uri = Uri.parse(
+        'http://keymanager.theiotproject.com/api/gate/teamId/${teamId}');
+    http.Response response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
 
     if (response.statusCode == 200) {
       String json = response.body;
