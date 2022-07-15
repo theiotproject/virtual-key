@@ -14,10 +14,16 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: const Icon(
+        Icons.arrow_back_ios_new_outlined,
+        color: Colors.black,
+      ),
       title: Text(
         title,
-        style: const TextStyle(color: Colors.white),
+        style:
+            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),
+      centerTitle: true,
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       flexibleSpace: Container(
@@ -25,11 +31,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(20),
             bottomRight: Radius.circular(20),
-          ),
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.deepPurpleAccent],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
           ),
         ),
       ),

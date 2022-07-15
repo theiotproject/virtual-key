@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Virtual Key',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.blueGrey.shade50,
+        scaffoldBackgroundColor: Colors.white,
       ),
       initialRoute: '/',
       routes: {
