@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
+import 'package:virtual_key/widgets/custom_appbar.dart';
 
 class AdminTeams extends StatefulWidget {
   const AdminTeams({Key? key}) : super(key: key);
@@ -42,9 +43,7 @@ class _AdminTeamsState extends State<AdminTeams> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your teams - admin'),
-      ),
+      appBar: CustomAppBar('Your teams - admin', false),
       body: Visibility(
         visible: isLoaded,
         replacement: const Center(

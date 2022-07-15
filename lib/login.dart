@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar('Log in'),
+      appBar: CustomAppBar('Log in', true),
       body: Center(
         child: ListView(
           padding: const EdgeInsets.all(32),
@@ -71,6 +71,18 @@ class _LoginState extends State<Login> {
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.red,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                onPressed: (() =>
+                    Navigator.pushNamed(context, '/emergency_open')),
+                icon: const Icon(
+                  Icons.lock_reset,
+                  size: 32,
+                  color: Colors.grey,
                 ),
               ),
             ),
