@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/widgets/custom_appbar.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -34,9 +35,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log In'),
-      ),
+      appBar: CustomAppBar('Log in', true),
       body: Center(
         child: ListView(
           padding: const EdgeInsets.all(32),
@@ -72,6 +71,18 @@ class _LoginState extends State<Login> {
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.red,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                onPressed: (() =>
+                    Navigator.pushNamed(context, '/emergency_open')),
+                icon: const Icon(
+                  Icons.lock_reset,
+                  size: 32,
+                  color: Colors.grey,
                 ),
               ),
             ),

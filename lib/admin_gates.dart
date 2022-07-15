@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
+import 'package:virtual_key/widgets/custom_appbar.dart';
 
 class AdminGates extends StatefulWidget {
   const AdminGates({Key? key}) : super(key: key);
@@ -35,9 +36,7 @@ class _AdminGatesState extends State<AdminGates> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your gates'),
-      ),
+      appBar: CustomAppBar('Open gate', true),
       body: Visibility(
         visible: isLoaded,
         replacement: const Center(

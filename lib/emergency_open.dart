@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:virtual_key/widgets/custom_appbar.dart';
 
 class EmergencyOpen extends StatefulWidget {
   const EmergencyOpen({Key? key}) : super(key: key);
@@ -20,9 +21,7 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Emergency Lock Opening'),
-      ),
+      appBar: CustomAppBar('Emergency lock opening', true),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
