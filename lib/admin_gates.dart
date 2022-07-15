@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 
-class UserGates extends StatefulWidget {
-  const UserGates({Key? key}) : super(key: key);
+class AdminGates extends StatefulWidget {
+  const AdminGates({Key? key}) : super(key: key);
 
   @override
-  State<UserGates> createState() => _UserGatesState();
+  State<AdminGates> createState() => _AdminGatesState();
 }
 
-class _UserGatesState extends State<UserGates> {
+class _AdminGatesState extends State<AdminGates> {
   List<Gate>? gates;
   bool isLoaded = false;
 
@@ -22,7 +23,8 @@ class _UserGatesState extends State<UserGates> {
   }
 
   getData() async {
-    gates = await RemoteService().getGates();
+    gates = await RemoteService().getGates(adminTeamId);
+
     if (gates != null) {
       setState(() {
         isLoaded = true;
@@ -48,7 +50,7 @@ class _UserGatesState extends State<UserGates> {
               return Card(
                 child: ListTile(
                   title: Text(
-                    gates![index].title,
+                    gates![index].name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -57,8 +59,10 @@ class _UserGatesState extends State<UserGates> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/gate_key',
-                        arguments: {"id": gates![index].id.toString()});
+                    Navigator.pushNamed(context, '/gate_key', arguments: {
+                      "name": gates![index].name,
+                      "magic_code": gates![index].serialNumber
+                    });
                   },
                 ),
               );

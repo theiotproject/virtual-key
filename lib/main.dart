@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_key/admin_gates.dart';
+import 'package:virtual_key/admin_teams.dart';
 import 'package:virtual_key/emergency_open.dart';
 import 'package:virtual_key/gate_key.dart';
 import 'package:virtual_key/home.dart';
 import 'package:virtual_key/login.dart';
 import 'package:virtual_key/user_hub.dart';
-import 'package:virtual_key/user_gates.dart';
 import 'package:virtual_key/user_teams.dart';
 
 void main() {
@@ -29,8 +30,9 @@ class MyApp extends StatelessWidget {
         '/emergency_open': (context) => const EmergencyOpen(),
         '/login': (context) => const Login(),
         '/user_hub': (context) => const UserHub(),
+        '/admin_teams': (context) => const AdminTeams(),
+        '/admin_gates': (context) => const AdminGates(),
         '/user_teams': (context) => const UserTeams(),
-        '/user_gates': (context) => const UserGates(),
         '/gate_key': (context) => const GateKey()
       },
     );

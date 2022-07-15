@@ -58,8 +58,7 @@ class _UserTeamsState extends State<UserTeams> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/gate_key',
-                        arguments: {"id": teams![index].id.toString()});
+                    // Navigator.pushNamed(context, '/');
                   },
                 ),
               );
