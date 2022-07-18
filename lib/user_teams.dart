@@ -57,7 +57,9 @@ class _UserTeamsState extends State<UserTeams> {
                     ),
                   ),
                   onTap: () {
-                    // Navigator.pushNamed(context, '/');
+                    Navigator.pushNamed(context, '/key_code', arguments: {
+                      "name": teams![index].name,
+                    });
                   },
                 ),
               );

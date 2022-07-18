@@ -58,7 +58,7 @@ class _AdminGatesState extends State<AdminGates> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/gate_key', arguments: {
+                    Navigator.pushNamed(context, '/gate_code', arguments: {
                       "name": gates![index].name,
                       "magic_code": gates![index].serialNumber
                     });

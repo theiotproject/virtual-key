@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 
-class GateKey extends StatelessWidget {
-  const GateKey({Key? key}) : super(key: key);
+class GateCode extends StatelessWidget {
+  const GateCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
