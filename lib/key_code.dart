@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:virtual_key/globals.dart';
-import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 
@@ -13,8 +12,10 @@ class KeyCode extends StatefulWidget {
 }
 
 class _KeyCodeState extends State<KeyCode> {
-  List<Team>? teams;
+  String? code;
   bool isLoaded = false;
+
+  String now = DateTime.now().toString().substring(0, 19);
 
   @override
   void initState() {
@@ -25,8 +26,8 @@ class _KeyCodeState extends State<KeyCode> {
   }
 
   getData() async {
-    teams = await RemoteService().getTeams(user!.id);
-    if (teams != null) {
+    code = await RemoteService().getKeyCode(selectedTeamId);
+    if (code != null) {
       setState(() {
         isLoaded = true;
       });
@@ -45,7 +46,7 @@ class _KeyCodeState extends State<KeyCode> {
         ),
         child: Center(
           child: QrImage(
-            data: '2022-07-18 11:59:21/MSDECVKOPN',
+            data: '$now/${code.toString()}',
             size: 300,
             backgroundColor: Colors.white,
           ),

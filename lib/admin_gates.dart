@@ -47,6 +47,7 @@ class _AdminGatesState extends State<AdminGates> {
             itemCount: gates?.length,
             itemBuilder: (context, index) {
               return Card(
+                elevation: 5,
                 child: ListTile(
                   title: Text(
                     gates![index].name,

@@ -46,6 +46,7 @@ class _UserTeamsState extends State<UserTeams> {
             itemCount: teams?.length,
             itemBuilder: (context, index) {
               return Card(
+                elevation: 5,
                 child: ListTile(
                   title: Text(
                     teams![index].name,
@@ -57,6 +58,7 @@ class _UserTeamsState extends State<UserTeams> {
                     ),
                   ),
                   onTap: () {
+                    selectedTeamId = teams![index].id;
                     Navigator.pushNamed(context, '/key_code', arguments: {
                       "name": teams![index].name,
                     });
