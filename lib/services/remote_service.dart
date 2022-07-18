@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class RemoteService {
   Future<http.Response> login(String email, String password, String device) {
     return http.post(
-      Uri.parse('http://keymanager.theiotproject.com/api/auth/token'),
+      Uri.parse('https://keymanager.theiotproject.com/api/auth/token'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -23,7 +23,7 @@ class RemoteService {
   Future<User?> getUser() async {
     http.Client client = http.Client();
 
-    Uri uri = Uri.parse('http://keymanager.theiotproject.com/api/user');
+    Uri uri = Uri.parse('https://keymanager.theiotproject.com/api/user');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -39,7 +39,7 @@ class RemoteService {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'http://keymanager.theiotproject.com/api/team/userId/${userId}');
+        'https://keymanager.theiotproject.com/api/teams/userId/${userId}');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -52,11 +52,27 @@ class RemoteService {
     }
   }
 
+  Future<String?> getKeyCode(teamId) async {
+    http.Client client = http.Client();
+
+    Uri uri = Uri.parse(
+        'https://keymanager.theiotproject.com/api/virtualKeys/code/${teamId}');
+    http.Response response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+  }
+
   Future<String?> checkAdmin(teamId) async {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'http://keymanager.theiotproject.com/api/auth/permission/teamId/${teamId}');
+        'https://keymanager.theiotproject.com/api/auth/permission/teamId/${teamId}/request');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -72,7 +88,7 @@ class RemoteService {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'http://keymanager.theiotproject.com/api/gate/teamId/${teamId}');
+        'https://keymanager.theiotproject.com/api/gates/teamId/${teamId}');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

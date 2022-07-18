@@ -54,6 +54,7 @@ class _AdminTeamsState extends State<AdminTeams> {
             itemCount: adminTeams.length,
             itemBuilder: (context, index) {
               return Card(
+                elevation: 5,
                 child: ListTile(
                   title: Text(
                     adminTeams[index].name,
