@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/team.dart';
+import 'package:virtual_key/models/virtual_key.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 
-class UserTeams extends StatefulWidget {
-  const UserTeams({Key? key}) : super(key: key);
+class UserKeys extends StatefulWidget {
+  const UserKeys({Key? key}) : super(key: key);
 
   @override
-  State<UserTeams> createState() => _UserTeamsState();
+  State<UserKeys> createState() => _UserKeysState();
 }
 
-class _UserTeamsState extends State<UserTeams> {
-  List<Team>? teams;
+class _UserKeysState extends State<UserKeys> {
+  List<VirtualKey>? keys;
   bool isLoaded = false;
 
   @override
@@ -24,8 +25,8 @@ class _UserTeamsState extends State<UserTeams> {
   }
 
   getData() async {
-    teams = await RemoteService().getTeams(user!.id);
-    if (teams != null) {
+    keys = await RemoteService().getKeys(selectedTeamId);
+    if (keys != null) {
       setState(() {
         isLoaded = true;
       });
@@ -34,8 +35,9 @@ class _UserTeamsState extends State<UserTeams> {
 
   @override
   Widget build(BuildContext context) {
+    Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
     return Scaffold(
-      appBar: CustomAppBar('Your teams', false),
+      appBar: CustomAppBar('${arguments['name']} keys', true),
       body: Column(
         children: [
           const Divider(),
@@ -47,13 +49,13 @@ class _UserTeamsState extends State<UserTeams> {
             child: Expanded(
               child: ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: teams?.length,
+                  itemCount: keys?.length,
                   itemBuilder: (context, index) {
                     return Card(
                       elevation: 5,
                       child: ListTile(
                         title: Text(
-                          teams![index].name,
+                          keys![index].userId.toString(),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -62,11 +64,10 @@ class _UserTeamsState extends State<UserTeams> {
                           ),
                         ),
                         onTap: () {
-                          selectedTeamId = teams![index].id;
-                          Navigator.pushNamed(context, '/user_keys',
-                              arguments: {
-                                "name": teams![index].name,
-                              });
+                          selectedKeyId = keys![index].id;
+                          Navigator.pushNamed(context, '/key_code', arguments: {
+                            "name": keys![index].id.toString(),
+                          });
                         },
                       ),
                     );

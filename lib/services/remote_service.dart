@@ -4,6 +4,7 @@ import 'package:virtual_key/models/user.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/models/virtual_key.dart';
 
 class RemoteService {
   Future<http.Response> login(String email, String password, String device) {
@@ -52,11 +53,28 @@ class RemoteService {
     }
   }
 
-  Future<String?> getKeyCode(teamId) async {
+  Future<List<VirtualKey>?> getKeys(teamId) async {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/virtualKeys/code/${teamId}');
+        'https://keymanager.theiotproject.com/api/virtualKeys/teamId/${teamId}/token');
+    http.Response response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      String json = response.body;
+      return virtualKeyFromJson(json);
+    }
+  }
+
+  Future<String?> getKeyCode(keyId) async {
+    http.Client client = http.Client();
+
+    Uri uri = Uri.parse(
+        'https://keymanager.theiotproject.com/api/virtualKeys/code/${keyId}');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

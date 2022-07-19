@@ -26,7 +26,7 @@ class _KeyCodeState extends State<KeyCode> {
   }
 
   getData() async {
-    code = await RemoteService().getKeyCode(selectedTeamId);
+    code = await RemoteService().getKeyCode(selectedKeyId);
     if (code != null) {
       setState(() {
         isLoaded = true;
@@ -38,7 +38,7 @@ class _KeyCodeState extends State<KeyCode> {
   Widget build(BuildContext context) {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
     return Scaffold(
-      appBar: CustomAppBar('${arguments['name']} key', true),
+      appBar: CustomAppBar('${arguments['name']}', true),
       body: Visibility(
         visible: isLoaded,
         replacement: const Center(
