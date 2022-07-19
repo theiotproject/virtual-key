@@ -24,6 +24,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
+        dividerTheme: const DividerThemeData(
+          space: 80,
+          thickness: 3,
+          color: Colors.blue,
+          indent: 60,
+          endIndent: 60,
+        ),
       ),
       initialRoute: '/',
       routes: {

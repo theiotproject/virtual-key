@@ -9,35 +9,39 @@ String gateToJson(List<Gate> data) =>
 class Gate {
   Gate({
     required this.id,
-    required this.serialNumber,
     required this.name,
+    required this.serialNumber,
+    required this.magicCode,
     required this.teamId,
-    required this.updatedAt,
-    required this.createdAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   int id;
-  String serialNumber;
   String name;
+  String serialNumber;
+  String magicCode;
   int teamId;
-  DateTime updatedAt;
-  DateTime createdAt;
+  dynamic createdAt;
+  dynamic updatedAt;
 
   factory Gate.fromJson(Map<String, dynamic> json) => Gate(
         id: json["id"],
-        serialNumber: json["serial_number"],
         name: json["name"],
+        serialNumber: json["serial_number"],
+        magicCode: json["magic_code"],
         teamId: json["team_id"],
-        updatedAt: DateTime.parse(json["updated_at"]),
-        createdAt: DateTime.parse(json["created_at"]),
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "serial_number": serialNumber,
         "name": name,
+        "serial_number": serialNumber,
+        "magic_code": magicCode,
         "team_id": teamId,
-        "updated_at": updatedAt.toIso8601String(),
-        "created_at": createdAt.toIso8601String(),
+        "created_at": createdAt,
+        "updated_at": updatedAt,
       };
 }

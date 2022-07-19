@@ -44,64 +44,71 @@ class _AdminTeamsState extends State<AdminTeams> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar('Your teams - admin', false),
-      body: Visibility(
-        visible: isLoaded,
-        replacement: const Center(
-          child: CircularProgressIndicator(),
-        ),
-        child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: adminTeams.length,
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 5,
-                child: ListTile(
-                  title: Text(
-                    adminTeams[index].name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    adminTeamId = adminTeams[index].id;
-                    Navigator.pushNamed(context, '/admin_gates');
-                  },
-                ),
-
-                //Drop down list design for future use
-                /*
-                key: PageStorageKey(0),
-                color: Colors.white,
-                elevation: 4,
-                child: ExpansionTile(
-                  controlAffinity: ListTileControlAffinity.trailing,
-                  childrenPadding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  expandedCrossAxisAlignment: CrossAxisAlignment.end,
-                  maintainState: true,
-                  title: Text(
-                    adminTeams[index].name,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  children: const [
-                    Text(
-                      "gatename",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          const Divider(),
+          Visibility(
+            visible: isLoaded,
+            replacement: const Center(
+              child: CircularProgressIndicator(),
+            ),
+            child: Expanded(
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: adminTeams.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 5,
+                      child: ListTile(
+                        title: Text(
+                          adminTeams[index].name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onTap: () {
+                          adminTeamId = adminTeams[index].id;
+                          Navigator.pushNamed(context, '/admin_gates');
+                        },
                       ),
-                    ),
-                  ],
-                ),
-                */
-              );
-            }),
+
+                      //Drop down list design for future use
+                      /*
+                      key: PageStorageKey(0),
+                      color: Colors.white,
+                      elevation: 4,
+                      child: ExpansionTile(
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        childrenPadding:
+                            const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        expandedCrossAxisAlignment: CrossAxisAlignment.end,
+                        maintainState: true,
+                        title: Text(
+                          adminTeams[index].name,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        children: const [
+                          Text(
+                            "gatename",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      */
+                    );
+                  }),
+            ),
+          ),
+        ],
       ),
     );
   }
