@@ -36,36 +36,43 @@ class _UserTeamsState extends State<UserTeams> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar('Your teams', false),
-      body: Visibility(
-        visible: isLoaded,
-        replacement: const Center(
-          child: CircularProgressIndicator(),
-        ),
-        child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: teams?.length,
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 5,
-                child: ListTile(
-                  title: Text(
-                    teams![index].name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    selectedTeamId = teams![index].id;
-                    Navigator.pushNamed(context, '/key_code', arguments: {
-                      "name": teams![index].name,
-                    });
-                  },
-                ),
-              );
-            }),
+      body: Column(
+        children: [
+          const Divider(),
+          Visibility(
+            visible: isLoaded,
+            replacement: const Center(
+              child: CircularProgressIndicator(),
+            ),
+            child: Expanded(
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: teams?.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 5,
+                      child: ListTile(
+                        title: Text(
+                          teams![index].name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onTap: () {
+                          selectedTeamId = teams![index].id;
+                          Navigator.pushNamed(context, '/key_code', arguments: {
+                            "name": teams![index].name,
+                          });
+                        },
+                      ),
+                    );
+                  }),
+            ),
+          ),
+        ],
       ),
     );
   }
