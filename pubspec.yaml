@@ -65,6 +65,7 @@ flutter:
   assets:
     - assets/images/qrcodebusiness.png
     - assets/images/logo.png
+    - assets/images/bottomwave.png
 
 
   fonts:

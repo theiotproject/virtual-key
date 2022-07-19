@@ -94,6 +94,13 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Image.asset('assets/images/bottomwave.png'),
+              ],
+            ),
           ],
         ),
       ),
