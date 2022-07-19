@@ -25,6 +25,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'Montserrat',
+        textTheme: const TextTheme(
+          headline6: TextStyle(fontWeight: FontWeight.bold),
+          bodyText2: TextStyle(fontWeight: FontWeight.w500),
+          subtitle1: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          button: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         dividerTheme: const DividerThemeData(
           space: 80,
           thickness: 3,

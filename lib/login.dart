@@ -40,6 +40,14 @@ class _LoginState extends State<Login> {
         child: ListView(
           padding: const EdgeInsets.all(32),
           children: [
+            const Text(
+              'Welcome back! Glad to see you, Again!',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
             buildEmail(),
             const SizedBox(height: 24),
             buildPassword(),
@@ -95,7 +103,7 @@ class _LoginState extends State<Login> {
   Widget buildEmail() => TextField(
         controller: emailController,
         decoration: InputDecoration(
-          labelText: 'Email',
+          labelText: 'Enter your email',
           hintText: 'name@example.com',
           errorText: isEmailValid ? null : 'Invalid email adress',
           prefixIcon: const Icon(Icons.mail),
@@ -105,7 +113,9 @@ class _LoginState extends State<Login> {
                   onPressed: () => emailController.clear(),
                   icon: const Icon(Icons.close),
                 ),
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.done,
@@ -114,8 +124,7 @@ class _LoginState extends State<Login> {
   Widget buildPassword() => TextField(
         controller: passwordController,
         decoration: InputDecoration(
-          labelText: 'Password',
-          hintText: 'Your password',
+          labelText: 'Enter your password',
           suffixIcon: IconButton(
             onPressed: () =>
                 setState(() => isPasswordHidden = !isPasswordHidden),
@@ -123,7 +132,9 @@ class _LoginState extends State<Login> {
                 ? const Icon(Icons.visibility_off)
                 : const Icon(Icons.visibility),
           ),
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         obscureText: isPasswordHidden,
       );
