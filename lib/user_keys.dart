@@ -64,8 +64,9 @@ class _UserKeysState extends State<UserKeys> {
                           ),
                         ),
                         onTap: () {
+                          selectedKeyId = keys![index].id;
                           Navigator.pushNamed(context, '/key_code', arguments: {
-                            "name": keys![index].id,
+                            "name": keys![index].id.toString(),
                           });
                         },
                       ),

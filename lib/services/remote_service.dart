@@ -70,11 +70,11 @@ class RemoteService {
     }
   }
 
-  Future<String?> getKeyCode(teamId) async {
+  Future<String?> getKeyCode(keyId) async {
     http.Client client = http.Client();
 
     Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/virtualKeys/code/${teamId}');
+        'https://keymanager.theiotproject.com/api/virtualKeys/code/${keyId}');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

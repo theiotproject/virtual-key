@@ -5,4 +5,5 @@ User? user;
 bool isLogged = false;
 
 int? selectedTeamId;
+int? selectedKeyId;
 int? adminTeamId;
