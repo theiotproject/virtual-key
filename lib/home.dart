@@ -21,7 +21,7 @@ class Home extends StatelessWidget {
               'We\'re glad you\'re here, \n let\'s get started',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 32,
+                fontSize: 28,
                 color: Colors.grey,
               ),
             ),

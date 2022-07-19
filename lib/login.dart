@@ -35,9 +35,14 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBar('Log in', true),
-      body: Center(
-        child: ListView(
+      body: Stack(children: [
+        Positioned(
+          bottom: 0.0,
+          child: Image.asset('assets/images/bottomwave.png'),
+        ),
+        ListView(
           padding: const EdgeInsets.all(32),
           children: [
             const Text(
@@ -94,16 +99,9 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Image.asset('assets/images/bottomwave.png'),
-              ],
-            ),
           ],
         ),
-      ),
+      ]),
     );
   }
 
