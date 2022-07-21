@@ -59,10 +59,15 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                http.Response response = await RemoteService().login(
-                    emailController.text, passwordController.text, "phonename");
+                if (emailController.text.isNotEmpty &&
+                    passwordController.text.isNotEmpty) {
+                  http.Response response = await RemoteService().login(
+                      emailController.text,
+                      passwordController.text,
+                      "phonename");
 
-                token = response.body;
+                  token = response.body;
+                }
 
                 user = await RemoteService().getUser();
                 if (user != null) {
@@ -71,7 +76,7 @@ class _LoginState extends State<Login> {
                       context, '/user_hub', (_) => false);
                 } else {
                   setState(() {
-                    errorMsg = 'User does not exist';
+                    errorMsg = 'Provided login details are not valid';
                   });
                 }
               },
