@@ -35,21 +35,39 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBar('Log in', true),
-      body: Center(
-        child: ListView(
+      body: Stack(children: [
+        Positioned(
+          bottom: 0.0,
+          child: Image.asset('assets/images/bottomwave.png'),
+        ),
+        ListView(
           padding: const EdgeInsets.all(32),
           children: [
+            const Text(
+              'Welcome back! Glad to see you, Again!',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
             buildEmail(),
             const SizedBox(height: 24),
             buildPassword(),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                http.Response response = await RemoteService().login(
-                    emailController.text, passwordController.text, "phonename");
+                if (emailController.text.isNotEmpty &&
+                    passwordController.text.isNotEmpty) {
+                  http.Response response = await RemoteService().login(
+                      emailController.text,
+                      passwordController.text,
+                      "phonename");
 
-                token = response.body;
+                  token = response.body;
+                }
 
                 user = await RemoteService().getUser();
                 if (user != null) {
@@ -58,7 +76,7 @@ class _LoginState extends State<Login> {
                       context, '/user_hub', (_) => false);
                 } else {
                   setState(() {
-                    errorMsg = 'User does not exist';
+                    errorMsg = 'Provided login details are not valid';
                   });
                 }
               },
@@ -88,14 +106,14 @@ class _LoginState extends State<Login> {
             ),
           ],
         ),
-      ),
+      ]),
     );
   }
 
   Widget buildEmail() => TextField(
         controller: emailController,
         decoration: InputDecoration(
-          labelText: 'Email',
+          labelText: 'Enter your email',
           hintText: 'name@example.com',
           errorText: isEmailValid ? null : 'Invalid email adress',
           prefixIcon: const Icon(Icons.mail),
@@ -105,7 +123,9 @@ class _LoginState extends State<Login> {
                   onPressed: () => emailController.clear(),
                   icon: const Icon(Icons.close),
                 ),
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.done,
@@ -114,8 +134,7 @@ class _LoginState extends State<Login> {
   Widget buildPassword() => TextField(
         controller: passwordController,
         decoration: InputDecoration(
-          labelText: 'Password',
-          hintText: 'Your password',
+          labelText: 'Enter your password',
           suffixIcon: IconButton(
             onPressed: () =>
                 setState(() => isPasswordHidden = !isPasswordHidden),
@@ -123,7 +142,9 @@ class _LoginState extends State<Login> {
                 ? const Icon(Icons.visibility_off)
                 : const Icon(Icons.visibility),
           ),
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         obscureText: isPasswordHidden,
       );

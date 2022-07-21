@@ -21,18 +21,21 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: CustomAppBar('Emergency lock opening', true),
+      appBar: CustomAppBar('Generate backup code', true),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: ListView(
+          //mainAxisAlignment: MainAxisAlignment.start,
+          padding: const EdgeInsets.all(32),
           children: [
             const SizedBox(height: 20),
             SizedBox(
               width: 350,
               child: TextField(
                 controller: qrDataController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   labelText: 'Type your code here',
                   labelStyle: TextStyle(color: Colors.black),
                   hintText: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
@@ -41,6 +44,7 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
                 style: const TextStyle(fontSize: 20),
               ),
             ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 if (guidRegExp.hasMatch(qrDataController.text)) {
@@ -56,19 +60,26 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
                   });
                 }
               },
-              style: ElevatedButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 20),
-              ),
-              child: const Text('Generate emergency key'),
+              child: const Text('Generate'),
             ),
-            Text(textMsg),
             const SizedBox(height: 10),
-            Visibility(
-              visible: showQr,
-              child: QrImage(
-                data: qrTextData,
-                size: 200,
-                backgroundColor: Colors.white,
+            Center(
+              child: Text(
+                textMsg,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: Visibility(
+                visible: showQr,
+                child: QrImage(
+                  data: qrTextData,
+                  size: 300,
+                  backgroundColor: Colors.white,
+                ),
               ),
             ),
           ],

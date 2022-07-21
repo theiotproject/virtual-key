@@ -9,6 +9,7 @@ import 'package:virtual_key/login.dart';
 import 'package:virtual_key/user_hub.dart';
 import 'package:virtual_key/user_keys.dart';
 import 'package:virtual_key/user_teams.dart';
+import 'package:virtual_key/values/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +26,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'Montserrat',
+        textTheme: const TextTheme(
+          headline6: TextStyle(fontWeight: FontWeight.bold),
+          bodyText2: TextStyle(fontWeight: FontWeight.w500),
+          subtitle1: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          button: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: colorBackground,
+        ),
         dividerTheme: const DividerThemeData(
           space: 80,
           thickness: 3,

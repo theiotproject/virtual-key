@@ -21,16 +21,20 @@ class Home extends StatelessWidget {
               'We\'re glad you\'re here, \n let\'s get started',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 32,
+                fontSize: 28,
                 color: Colors.grey,
               ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              child: const Text('Start'),
+            SizedBox(
+              width: 300,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: const Text('Start'),
+              ),
             ),
           ],
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/globals.dart';
-import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/models/virtual_key.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
