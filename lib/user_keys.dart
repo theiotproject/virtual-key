@@ -47,6 +47,7 @@ class _UserKeysState extends State<UserKeys> {
             ),
             child: Expanded(
               child: ListView.builder(
+                  shrinkWrap: true,
                   padding: const EdgeInsets.all(16),
                   itemCount: keys?.length,
                   itemBuilder: (context, index) {
@@ -54,7 +55,7 @@ class _UserKeysState extends State<UserKeys> {
                       elevation: 5,
                       child: ListTile(
                         title: Text(
-                          keys![index].userId.toString(),
+                          keys![index].label,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -65,7 +66,7 @@ class _UserKeysState extends State<UserKeys> {
                         onTap: () {
                           selectedKeyId = keys![index].id;
                           Navigator.pushNamed(context, '/key_code', arguments: {
-                            "name": keys![index].id.toString(),
+                            "label": keys![index].label,
                           });
                         },
                       ),
