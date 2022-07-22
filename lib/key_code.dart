@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'package:virtual_key/globals.dart';
+import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 
@@ -13,6 +15,8 @@ class KeyCode extends StatefulWidget {
 
 class _KeyCodeState extends State<KeyCode> {
   String? code;
+  List<Gate>? gates;
+  List<String> gatesNumbers = [];
   bool isLoaded = false;
 
   String now = DateTime.now().toString().substring(0, 19);
@@ -26,12 +30,29 @@ class _KeyCodeState extends State<KeyCode> {
   }
 
   getData() async {
-    code = await RemoteService().getKeyCode(selectedKeyId);
-    if (code != null) {
+    gates = await RemoteService().getKeyGates(selectedKeyId);
+    print(gates);
+    if (gates != null) {
+      gates?.forEach((element) => gatesNumbers.add(element.serialNumber));
       setState(() {
         isLoaded = true;
       });
     }
+  }
+
+  generateCodeData() {
+    String uuid = const Uuid().v1();
+    String createdAt = DateTime.now().toString().substring(0, 19);
+    String gNum = '';
+    gatesNumbers.asMap().forEach((index, element) {
+      if (gatesNumbers.length - 1 == index) {
+        gNum += '${element};';
+      } else {
+        gNum += '${element},';
+      }
+    });
+
+    return 'OPEN:ID:${uuid};CA:${createdAt};G:${gNum}';
   }
 
   @override
@@ -46,7 +67,7 @@ class _KeyCodeState extends State<KeyCode> {
         ),
         child: Center(
           child: QrImage(
-            data: '$now/${code.toString()}',
+            data: generateCodeData(),
             size: 300,
             backgroundColor: Colors.white,
           ),
