@@ -14,10 +14,10 @@ class KeyCode extends StatefulWidget {
 }
 
 class _KeyCodeState extends State<KeyCode> {
-  String? code;
   List<Gate>? gates;
   List<String> gatesNumbers = [];
   bool isLoaded = false;
+  bool showCode = false;
 
   String now = DateTime.now().toString().substring(0, 19);
 
@@ -31,7 +31,6 @@ class _KeyCodeState extends State<KeyCode> {
 
   getData() async {
     gates = await RemoteService().getKeyGates(selectedKeyId);
-    print(gates);
     if (gates != null) {
       gates?.forEach((element) => gatesNumbers.add(element.serialNumber));
       setState(() {
@@ -55,6 +54,22 @@ class _KeyCodeState extends State<KeyCode> {
     return 'OPEN:ID:${uuid};CA:${createdAt};G:${gNum}';
   }
 
+  checkDay() {
+    int weekday = DateTime.now().weekday;
+
+    Map days = <int, String>{
+      1: 'Monday',
+      2: 'Tuesday',
+      3: 'Wednesday',
+      4: 'Thursday',
+      5: 'Friday',
+      6: 'Saturday',
+      7: 'Sunday'
+    };
+
+    return days[weekday];
+  }
+
   @override
   Widget build(BuildContext context) {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
@@ -66,11 +81,23 @@ class _KeyCodeState extends State<KeyCode> {
           child: CircularProgressIndicator(),
         ),
         child: Center(
-          child: QrImage(
-            data: generateCodeData(),
-            size: 300,
-            backgroundColor: Colors.white,
-          ),
+          child: arguments['is_valid_day']
+              ? QrImage(
+                  data: generateCodeData(),
+                  size: 300,
+                  backgroundColor: Colors.white,
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    'Your code doesn\'t work on ${checkDay()}s',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
         ),
       ),
     );
