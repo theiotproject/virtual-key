@@ -38,7 +38,7 @@ class _KeyCodeState extends State<KeyCode> {
   Widget build(BuildContext context) {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
     return Scaffold(
-      appBar: CustomAppBar('${arguments['name']}', true),
+      appBar: CustomAppBar('${arguments['label']}', true),
       body: Visibility(
         visible: isLoaded,
         replacement: const Center(

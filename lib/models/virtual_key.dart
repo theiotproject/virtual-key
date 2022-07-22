@@ -9,37 +9,35 @@ String virtualKeyToJson(List<VirtualKey> data) =>
 class VirtualKey {
   VirtualKey({
     required this.id,
+    required this.label,
     required this.userId,
-    required this.activeFrom,
-    required this.activeTo,
-    this.createdAt,
-    this.updatedAt,
+    required this.validDays,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   int id;
+  String label;
   int userId;
-  DateTime activeFrom;
-  DateTime activeTo;
-  dynamic? createdAt;
-  dynamic? updatedAt;
+  String validDays;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   factory VirtualKey.fromJson(Map<String, dynamic> json) => VirtualKey(
         id: json["id"],
+        label: json["label"],
         userId: json["user_id"],
-        activeFrom: DateTime.parse(json["active_from"]),
-        activeTo: DateTime.parse(json["active_to"]),
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
+        validDays: json["valid_days"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "label": label,
         "user_id": userId,
-        "active_from":
-            "${activeFrom.year.toString().padLeft(4, '0')}-${activeFrom.month.toString().padLeft(2, '0')}-${activeFrom.day.toString().padLeft(2, '0')}",
-        "active_to":
-            "${activeTo.year.toString().padLeft(4, '0')}-${activeTo.month.toString().padLeft(2, '0')}-${activeTo.day.toString().padLeft(2, '0')}",
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "valid_days": validDays,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
       };
 }
