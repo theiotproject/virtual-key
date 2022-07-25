@@ -32,6 +32,21 @@ class _UserKeysState extends State<UserKeys> {
     }
   }
 
+  isValidDay(validDays) {
+    int weekday = DateTime.now().weekday;
+    Map days = <int, String>{
+      1: 'M',
+      2: 'T',
+      3: 'W',
+      4: 'R',
+      5: 'F',
+      6: 'S',
+      7: 'U'
+    };
+
+    return validDays.contains(days[weekday]);
+  }
+
   @override
   Widget build(BuildContext context) {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
@@ -67,6 +82,9 @@ class _UserKeysState extends State<UserKeys> {
                           selectedKeyId = keys![index].id;
                           Navigator.pushNamed(context, '/key_code', arguments: {
                             "label": keys![index].label,
+                            "is_valid_day": isValidDay(
+                              keys![index].validDays,
+                            ),
                           });
                         },
                       ),

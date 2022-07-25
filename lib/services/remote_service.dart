@@ -70,6 +70,23 @@ class RemoteService {
     }
   }
 
+  Future<List<Gate>?> getKeyGates(virtualKeyId) async {
+    http.Client client = http.Client();
+
+    Uri uri = Uri.parse(
+        'https://keymanager.theiotproject.com/api/gates/virtualKeyId/${virtualKeyId}');
+    http.Response response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      String json = response.body;
+      return gateFromJson(json);
+    }
+  }
+
   Future<String?> getKeyCode(keyId) async {
     http.Client client = http.Client();
 
@@ -117,5 +134,23 @@ class RemoteService {
       String json = response.body;
       return gateFromJson(json);
     }
+  }
+
+  Future<http.Response> sendGenerationEvent(
+      String id, int virtualKeyId, bool accessGranted, String message) {
+    return http.post(
+      Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': id,
+        'virtual_key_id': virtualKeyId,
+        'access_granted': accessGranted,
+        'message': message
+      }),
+    );
   }
 }
