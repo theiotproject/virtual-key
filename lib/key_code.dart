@@ -18,8 +18,10 @@ class _KeyCodeState extends State<KeyCode> {
   List<String> gatesNumbers = [];
   bool isLoaded = false;
   bool showCode = false;
+  bool isFunctionCalled = false;
 
   String now = DateTime.now().toString().substring(0, 19);
+  String qrData = '';
 
   @override
   void initState() {
@@ -39,19 +41,38 @@ class _KeyCodeState extends State<KeyCode> {
     }
   }
 
-  generateCodeData() {
+  generateCodeData(bool isValid) {
+    int? virtualKeyId = selectedKeyId;
     String uuid = const Uuid().v1();
     String createdAt = DateTime.now().toString().substring(0, 19);
     String gNum = '';
     gatesNumbers.asMap().forEach((index, element) {
       if (gatesNumbers.length - 1 == index) {
-        gNum += '${element};';
+        gNum += '$element;';
       } else {
-        gNum += '${element},';
+        gNum += '$element,';
       }
     });
 
-    return 'OPEN:ID:${uuid};CA:${createdAt};G:${gNum}';
+    sendEvent(uuid, virtualKeyId!, isValid);
+
+    if (isValid) {
+      return 'OPEN:ID:$uuid;CA:$createdAt;G:$gNum';
+    } else {
+      return 'ACCESS DENIED';
+    }
+  }
+
+  sendEvent(String id, int virtualKeyId, bool accessGranted) async {
+    String message = '';
+    if (accessGranted) {
+      message = 'ACCESS GRANTED';
+    } else {
+      message = 'ACCESS DENIED: WEEKDAY IS NOT CORRECT';
+    }
+
+    await RemoteService()
+        .sendGenerationEvent(id, virtualKeyId, accessGranted, message);
   }
 
   checkDay() {
@@ -73,6 +94,12 @@ class _KeyCodeState extends State<KeyCode> {
   @override
   Widget build(BuildContext context) {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
+    if (!isFunctionCalled) {
+      setState(() {
+        qrData = generateCodeData(arguments['is_valid_day']);
+        isFunctionCalled = true;
+      });
+    }
     return Scaffold(
       appBar: CustomAppBar('${arguments['label']}', true),
       body: Visibility(
@@ -83,7 +110,7 @@ class _KeyCodeState extends State<KeyCode> {
         child: Center(
           child: arguments['is_valid_day']
               ? QrImage(
-                  data: generateCodeData(),
+                  data: qrData,
                   size: 300,
                   backgroundColor: Colors.white,
                 )
