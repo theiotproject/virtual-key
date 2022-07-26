@@ -153,4 +153,15 @@ class RemoteService {
       }),
     );
   }
+
+  Future<String> getNumberTriviaa(http.Client http) async {
+    Uri numberAPIURL = Uri.parse('http://numbersapi.com/random/trivia?json');
+    final response = await http.get(numberAPIURL);
+    if (response.statusCode == 200) {
+      final Map triviaJSON = jsonDecode(response.body);
+      return triviaJSON['text'];
+    } else {
+      return 'Failed to fetch number trivia';
+    }
+  }
 }
