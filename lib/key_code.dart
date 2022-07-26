@@ -94,7 +94,7 @@ class _KeyCodeState extends State<KeyCode> {
   @override
   Widget build(BuildContext context) {
     Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
-    if (!isFunctionCalled) {
+    if (!isFunctionCalled && isLoaded) {
       setState(() {
         qrData = generateCodeData(arguments['is_valid_day']);
         isFunctionCalled = true;
