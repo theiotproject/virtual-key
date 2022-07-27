@@ -29,6 +29,12 @@ class User {
   DateTime updatedAt;
   String profilePhotoUrl;
 
+  @override
+  bool operator ==(Object other) => other is User && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
+
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"],
