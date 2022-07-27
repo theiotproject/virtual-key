@@ -23,6 +23,12 @@ class Team {
   DateTime createdAt;
   DateTime updatedAt;
 
+  @override
+  bool operator ==(Object other) => other is Team && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
+
   factory Team.fromJson(Map<String, dynamic> json) => Team(
         id: json["id"],
         userId: json["user_id"],

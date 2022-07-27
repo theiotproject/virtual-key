@@ -25,6 +25,12 @@ class Gate {
   dynamic createdAt;
   dynamic updatedAt;
 
+  @override
+  bool operator ==(Object other) => other is Gate && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
+
   factory Gate.fromJson(Map<String, dynamic> json) => Gate(
         id: json["id"],
         name: json["name"],

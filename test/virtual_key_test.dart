@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:virtual_key/models/user.dart';
+import 'package:virtual_key/models/virtual_key.dart';
 import 'fixture/fixture_reader.dart';
 
 void main() {
-  final tUserModel = User(
+  final tVirtualKeyModel = VirtualKey(
     id: 1,
-    name: 'test',
-    email: 'test@test.com',
-    emailVerifiedAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
-    currentTeamId: 1,
+    label: 'test',
+    userId: 1,
+    validDays: 'MFS',
     createdAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
     updatedAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
-    profilePhotoUrl: '',
   );
 
   group('fromJson', () {
@@ -20,11 +18,11 @@ void main() {
       'make sure the fromJson function returns a valid model object when reading valid JSON',
       () async {
         final Map<String, dynamic> jsonMap =
-            json.decode(fixture('user_model.json'));
+            json.decode(fixture('virtual_key_model.json'));
 
-        final result = User.fromJson(jsonMap);
+        final result = VirtualKey.fromJson(jsonMap);
 
-        expect(result, tUserModel);
+        expect(result, tVirtualKeyModel);
       },
     );
   });
@@ -33,22 +31,18 @@ void main() {
     test(
       'make sure the toJson function returns a JSON value in the form of a valid map object when converting model data to JSON',
       () async {
-        final resultUserModel = tUserModel.toJson();
+        final resultVirtualKeyModel = tVirtualKeyModel.toJson();
 
-        final expectedUserModel = {
+        final expectedVirtualKeyModel = {
           'id': 1,
-          'name': 'test',
-          'email': 'test@test.com',
-          'email_verified_at': '2022-01-01T01:01:01.000Z',
-          'two_factor_confirmed_at': null,
-          'current_team_id': 1,
-          'profile_photo_path': null,
+          'label': 'test',
+          'user_id': 1,
+          'valid_days': 'MFS',
           'created_at': '2022-01-01T01:01:01.000Z',
           'updated_at': '2022-01-01T01:01:01.000Z',
-          'profile_photo_url': ''
         };
 
-        expect(resultUserModel, expectedUserModel);
+        expect(resultVirtualKeyModel, expectedVirtualKeyModel);
       },
     );
   });
