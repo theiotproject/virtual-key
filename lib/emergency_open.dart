@@ -37,7 +37,7 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   labelText: 'Type your code here',
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: const TextStyle(color: Colors.black),
                   hintText: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
                 ),
                 textInputAction: TextInputAction.done,

@@ -23,6 +23,12 @@ class VirtualKey {
   DateTime createdAt;
   DateTime updatedAt;
 
+  @override
+  bool operator ==(Object other) => other is VirtualKey && other.label == label;
+
+  @override
+  int get hashCode => label.hashCode;
+
   factory VirtualKey.fromJson(Map<String, dynamic> json) => VirtualKey(
         id: json["id"],
         label: json["label"],
