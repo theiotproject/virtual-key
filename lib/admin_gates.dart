@@ -3,6 +3,7 @@ import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
+import 'package:http/http.dart' as http;
 
 class AdminGates extends StatefulWidget {
   const AdminGates({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _AdminGatesState extends State<AdminGates> {
   }
 
   getData() async {
-    gates = await RemoteService().getGates(adminTeamId);
+    gates = await RemoteService().getGates(http.Client(), adminTeamId);
 
     if (gates != null) {
       setState(() {

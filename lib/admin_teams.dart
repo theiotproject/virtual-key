@@ -3,6 +3,7 @@ import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
+import 'package:http/http.dart' as http;
 
 class AdminTeams extends StatefulWidget {
   const AdminTeams({Key? key}) : super(key: key);
@@ -25,11 +26,12 @@ class _AdminTeamsState extends State<AdminTeams> {
   }
 
   getData() async {
-    teams = await RemoteService().getTeams(user!.id);
+    teams = await RemoteService().getTeams(http.Client(), user!.id);
 
     if (teams != null) {
       teams?.forEach((element) async {
-        bool isAdmin = await RemoteService().checkAdmin(element.id) == '1';
+        bool isAdmin =
+            await RemoteService().checkAdmin(http.Client(), element.id) == '1';
         if (isAdmin) {
           adminTeams.add(element);
           setState(() {

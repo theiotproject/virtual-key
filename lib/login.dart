@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
                   token = response.body;
                 }
 
-                user = await RemoteService().getUser();
+                user = await RemoteService().getUser(http.Client());
                 if (user != null) {
                   isLogged = true;
                   Navigator.pushNamedAndRemoveUntil(
