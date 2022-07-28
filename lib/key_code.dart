@@ -72,7 +72,7 @@ class _KeyCodeState extends State<KeyCode> {
     }
 
     await RemoteService()
-        .sendGenerationEvent(id, virtualKeyId, accessGranted, message);
+        .sendKeyCodeGenerationEvent(id, virtualKeyId, accessGranted, message);
   }
 
   checkDay() {
