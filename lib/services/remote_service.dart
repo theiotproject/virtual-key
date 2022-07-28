@@ -21,9 +21,7 @@ class RemoteService {
     );
   }
 
-  Future<User?> getUser() async {
-    http.Client client = http.Client();
-
+  Future<User?> getUser(http.Client client) async {
     Uri uri = Uri.parse('https://keymanager.theiotproject.com/api/user');
     http.Response response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
@@ -36,9 +34,7 @@ class RemoteService {
     }
   }
 
-  Future<List<Team>?> getTeams(userId) async {
-    http.Client client = http.Client();
-
+  Future<List<Team>?> getTeams(http.Client client, userId) async {
     Uri uri = Uri.parse(
         'https://keymanager.theiotproject.com/api/teams/userId/${userId}');
     http.Response response = await client.get(uri, headers: {
@@ -53,9 +49,7 @@ class RemoteService {
     }
   }
 
-  Future<List<VirtualKey>?> getKeys(teamId) async {
-    http.Client client = http.Client();
-
+  Future<List<VirtualKey>?> getKeys(http.Client client, teamId) async {
     Uri uri = Uri.parse(
         'https://keymanager.theiotproject.com/api/virtualKeys/teamId/${teamId}/token');
     http.Response response = await client.get(uri, headers: {
@@ -70,9 +64,7 @@ class RemoteService {
     }
   }
 
-  Future<List<Gate>?> getKeyGates(virtualKeyId) async {
-    http.Client client = http.Client();
-
+  Future<List<Gate>?> getKeyGates(http.Client client, virtualKeyId) async {
     Uri uri = Uri.parse(
         'https://keymanager.theiotproject.com/api/gates/virtualKeyId/${virtualKeyId}');
     http.Response response = await client.get(uri, headers: {
@@ -87,25 +79,7 @@ class RemoteService {
     }
   }
 
-  Future<String?> getKeyCode(keyId) async {
-    http.Client client = http.Client();
-
-    Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/virtualKeys/code/${keyId}');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-
-    if (response.statusCode == 200) {
-      return response.body;
-    }
-  }
-
-  Future<String?> checkAdmin(teamId) async {
-    http.Client client = http.Client();
-
+  Future<String?> checkAdmin(http.Client client, teamId) async {
     Uri uri = Uri.parse(
         'https://keymanager.theiotproject.com/api/auth/permission/teamId/${teamId}/request');
     http.Response response = await client.get(uri, headers: {
@@ -119,9 +93,7 @@ class RemoteService {
     }
   }
 
-  Future<List<Gate>?> getGates(teamId) async {
-    http.Client client = http.Client();
-
+  Future<List<Gate>?> getGates(http.Client client, teamId) async {
     Uri uri = Uri.parse(
         'https://keymanager.theiotproject.com/api/gates/teamId/${teamId}');
     http.Response response = await client.get(uri, headers: {

@@ -3,6 +3,7 @@ import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
+import 'package:http/http.dart' as http;
 
 class UserTeams extends StatefulWidget {
   const UserTeams({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _UserTeamsState extends State<UserTeams> {
   }
 
   getData() async {
-    teams = await RemoteService().getTeams(user!.id);
+    teams = await RemoteService().getTeams(http.Client(), user!.id);
     if (teams != null) {
       setState(() {
         isLoaded = true;

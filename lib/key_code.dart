@@ -5,6 +5,7 @@ import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
+import 'package:http/http.dart' as http;
 
 class KeyCode extends StatefulWidget {
   const KeyCode({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _KeyCodeState extends State<KeyCode> {
   }
 
   getData() async {
-    gates = await RemoteService().getKeyGates(selectedKeyId);
+    gates = await RemoteService().getKeyGates(http.Client(), selectedKeyId);
     if (gates != null) {
       gates?.forEach((element) => gatesNumbers.add(element.serialNumber));
       setState(() {
