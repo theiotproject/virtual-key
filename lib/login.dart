@@ -28,8 +28,7 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
 
-    readFromStorage();
-    if (token != null) {
+    if (token.isNotEmpty) {
       loginFromStorage();
     }
 
@@ -39,14 +38,12 @@ class _LoginState extends State<Login> {
         }));
   }
 
-  Future<void> readFromStorage() async {
-    token = await storage.read(key: "KEY_TOKEN");
-  }
-
   Future<void> loginFromStorage() async {
     user = await RemoteService().getUser(http.Client());
-    isLogged = true;
-    Navigator.pushNamedAndRemoveUntil(context, '/user_hub', (_) => false);
+    if (user != null) {
+      isLogged = true;
+      Navigator.pushNamedAndRemoveUntil(context, '/user_hub', (_) => false);
+    }
   }
 
   @override
@@ -84,8 +81,8 @@ class _LoginState extends State<Login> {
                       "phonename");
 
                   token = response.body;
-                  await storage.write(key: "KEY_TOKEN", value: token);
                 }
+                await storage.write(key: 'KEY_TOKEN', value: token);
 
                 user = await RemoteService().getUser(http.Client());
                 if (user != null) {

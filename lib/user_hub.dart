@@ -21,8 +21,11 @@ class _UserHubState extends State<UserHub> {
     setState(() {
       if (index == 2) {
         isLogged = false;
-        token = null;
+        token = '';
         user = null;
+
+        deleteTokenFromStorage();
+
         Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
       } else {
         currentIndex = index;
@@ -30,8 +33,8 @@ class _UserHubState extends State<UserHub> {
     });
   }
 
-  deleteLoginFromStorage() async {
-    token = await storage.write(key: "KEY_TOKEN", value: null);
+  Future<void> deleteTokenFromStorage() async {
+    await storage.write(key: 'KEY_TOKEN', value: '');
   }
 
   @override
