@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:virtual_key/admin_teams.dart';
 import 'package:virtual_key/user_teams.dart';
 import 'package:virtual_key/globals.dart';
@@ -11,6 +12,8 @@ class UserHub extends StatefulWidget {
 }
 
 class _UserHubState extends State<UserHub> {
+  final storage = const FlutterSecureStorage();
+
   int currentIndex = 1;
   final List<Widget> children = const [AdminTeams(), UserTeams()];
 
@@ -25,6 +28,10 @@ class _UserHubState extends State<UserHub> {
         currentIndex = index;
       }
     });
+  }
+
+  deleteLoginFromStorage() async {
+    token = await storage.write(key: "KEY_TOKEN", value: null);
   }
 
   @override

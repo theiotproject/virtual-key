@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final storage = const FlutterSecureStorage();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final emailRegExp = RegExp(
@@ -26,10 +28,25 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
 
+    readFromStorage();
+    if (token != null) {
+      loginFromStorage();
+    }
+
     emailController.addListener(() => setState(() {
           isEmailValid = emailRegExp.hasMatch(emailController.text) ||
               emailController.text.isEmpty;
         }));
+  }
+
+  Future<void> readFromStorage() async {
+    token = await storage.read(key: "KEY_TOKEN");
+  }
+
+  Future<void> loginFromStorage() async {
+    user = await RemoteService().getUser(http.Client());
+    isLogged = true;
+    Navigator.pushNamedAndRemoveUntil(context, '/user_hub', (_) => false);
   }
 
   @override
@@ -67,6 +84,7 @@ class _LoginState extends State<Login> {
                       "phonename");
 
                   token = response.body;
+                  await storage.write(key: "KEY_TOKEN", value: token);
                 }
 
                 user = await RemoteService().getUser(http.Client());
