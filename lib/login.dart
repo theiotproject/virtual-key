@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final storage = const FlutterSecureStorage();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final emailRegExp = RegExp(
@@ -68,6 +70,7 @@ class _LoginState extends State<Login> {
 
                   token = response.body;
                 }
+                await storage.write(key: 'KEY_TOKEN', value: token);
 
                 user = await RemoteService().getUser(http.Client());
                 if (user != null) {

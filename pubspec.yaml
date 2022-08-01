@@ -26,6 +26,7 @@ dependencies:
   qr_flutter: ^4.0.0
   http: ^0.13.4
   uuid: ^3.0.6
+  flutter_secure_storage: ^5.0.2
   cupertino_icons: ^1.0.2
 
 dev_dependencies:

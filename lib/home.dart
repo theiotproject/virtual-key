@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
               width: 300,
               height: 40,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pushNamed(context, '/login');
                 },
                 child: const Text('Start'),
