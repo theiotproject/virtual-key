@@ -28,22 +28,10 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
 
-    if (token.isNotEmpty) {
-      loginFromStorage();
-    }
-
     emailController.addListener(() => setState(() {
           isEmailValid = emailRegExp.hasMatch(emailController.text) ||
               emailController.text.isEmpty;
         }));
-  }
-
-  Future<void> loginFromStorage() async {
-    user = await RemoteService().getUser(http.Client());
-    if (user != null) {
-      isLogged = true;
-      Navigator.pushNamedAndRemoveUntil(context, '/user_hub', (_) => false);
-    }
   }
 
   @override

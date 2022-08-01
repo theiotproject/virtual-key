@@ -6,6 +6,7 @@ import 'package:virtual_key/gate_code.dart';
 import 'package:virtual_key/home.dart';
 import 'package:virtual_key/key_code.dart';
 import 'package:virtual_key/login.dart';
+import 'package:virtual_key/splash_screen.dart';
 import 'package:virtual_key/user_hub.dart';
 import 'package:virtual_key/user_keys.dart';
 import 'package:virtual_key/user_teams.dart';
@@ -45,8 +46,9 @@ class MyApp extends StatelessWidget {
           endIndent: 60,
         ),
       ),
-      initialRoute: '/',
+      initialRoute: '/splash_screen',
       routes: {
+        '/splash_screen': (context) => const SplashScreen(),
         '/': (context) => const Home(),
         '/emergency_open': (context) => const EmergencyOpen(),
         '/login': (context) => const Login(),

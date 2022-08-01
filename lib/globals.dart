@@ -1,6 +1,6 @@
 import 'package:virtual_key/models/user.dart';
 
-String token = '';
+String? token;
 User? user;
 bool isLogged = false;
 

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 
 class Home extends StatelessWidget {
@@ -33,9 +31,6 @@ class Home extends StatelessWidget {
               height: 40,
               child: ElevatedButton(
                 onPressed: () async {
-                  const storage = FlutterSecureStorage();
-                  token = (await storage.read(key: 'KEY_TOKEN'))!;
-
                   Navigator.pushNamed(context, '/login');
                 },
                 child: const Text('Start'),
