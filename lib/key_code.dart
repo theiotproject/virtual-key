@@ -45,7 +45,12 @@ class _KeyCodeState extends State<KeyCode> {
   generateCodeData(bool isValid) {
     int? virtualKeyId = selectedKeyId;
     String uuid = const Uuid().v1();
-    String createdAt = DateTime.now().toString().substring(0, 19);
+    String validFrom = DateTime.now().toString().substring(0, 19);
+    String validTo = DateTime.now()
+        .add(const Duration(minutes: 1))
+        .toString()
+        .substring(0, 19);
+
     String gNum = '';
     gatesNumbers.asMap().forEach((index, element) {
       if (gatesNumbers.length - 1 == index) {
@@ -58,7 +63,7 @@ class _KeyCodeState extends State<KeyCode> {
     sendEvent(uuid, virtualKeyId!, isValid);
 
     if (isValid) {
-      return 'OPEN:ID:$uuid;CA:$createdAt;G:$gNum';
+      return 'OPEN:ID:$uuid;VF:$validFrom;VT:$validTo;L:$gNum;';
     } else {
       return 'ACCESS DENIED';
     }
