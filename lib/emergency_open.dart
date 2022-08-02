@@ -49,7 +49,7 @@ class _EmergencyOpenState extends State<EmergencyOpen> {
               onPressed: () {
                 if (guidRegExp.hasMatch(qrDataController.text)) {
                   setState(() {
-                    qrTextData = qrDataController.text;
+                    qrTextData = 'MAGIC:${qrDataController.text};';
                     textMsg = 'Code accepted';
                     showQr = true;
                   });
