@@ -37,7 +37,7 @@ class _GateCodeState extends State<GateCode> {
       appBar: CustomAppBar(arguments['name'], true),
       body: Center(
         child: QrImage(
-          data: arguments['magic_code'],
+          data: 'MAGIC:${arguments['magic_code']};',
           size: 300,
           backgroundColor: Colors.white,
         ),

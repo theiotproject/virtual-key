@@ -75,8 +75,7 @@ class _LoginState extends State<Login> {
                 user = await RemoteService().getUser(http.Client());
                 if (user != null) {
                   isLogged = true;
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/user_hub', (_) => false);
+                  Navigator.pushReplacementNamed(context, '/user_hub');
                 } else {
                   setState(() {
                     errorMsg = 'Provided login details are not valid';

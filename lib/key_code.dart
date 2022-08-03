@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -15,11 +16,16 @@ class KeyCode extends StatefulWidget {
 }
 
 class _KeyCodeState extends State<KeyCode> {
+  Duration duration = const Duration(minutes: 1);
+  Timer? timer;
+
   List<Gate>? gates;
   List<String> gatesNumbers = [];
+
   bool isLoaded = false;
   bool showCode = false;
   bool isFunctionCalled = false;
+  bool isExpired = false;
 
   String now = DateTime.now().toString().substring(0, 19);
   String qrData = '';
@@ -30,6 +36,7 @@ class _KeyCodeState extends State<KeyCode> {
 
     //fetch data from API
     getData();
+    startTimer();
   }
 
   getData() async {
@@ -42,10 +49,34 @@ class _KeyCodeState extends State<KeyCode> {
     }
   }
 
+  countDown() {
+    final decreaseSeconds = 1;
+
+    setState(() {
+      final seconds = duration.inSeconds - decreaseSeconds;
+
+      if (seconds < 0) {
+        timer?.cancel();
+        isExpired = true;
+      } else {
+        duration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) => countDown());
+  }
+
   generateCodeData(bool isValid) {
     int? virtualKeyId = selectedKeyId;
     String uuid = const Uuid().v1();
-    String createdAt = DateTime.now().toString().substring(0, 19);
+    String validFrom = DateTime.now().toString().substring(0, 19);
+    String validTo = DateTime.now()
+        .add(const Duration(minutes: 1))
+        .toString()
+        .substring(0, 19);
+
     String gNum = '';
     gatesNumbers.asMap().forEach((index, element) {
       if (gatesNumbers.length - 1 == index) {
@@ -58,7 +89,7 @@ class _KeyCodeState extends State<KeyCode> {
     sendEvent(uuid, virtualKeyId!, isValid);
 
     if (isValid) {
-      return 'OPEN:ID:$uuid;CA:$createdAt;G:$gNum';
+      return 'OPEN:ID:$uuid;VF:$validFrom;VT:$validTo;L:$gNum;';
     } else {
       return 'ACCESS DENIED';
     }
@@ -110,11 +141,54 @@ class _KeyCodeState extends State<KeyCode> {
         ),
         child: Center(
           child: arguments['is_valid_day']
-              ? QrImage(
-                  data: qrData,
-                  size: 300,
-                  backgroundColor: Colors.white,
-                )
+              ? isExpired
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Code expired',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: () {
+                            duration = const Duration(minutes: 1);
+                            startTimer();
+                            setState(() {
+                              qrData =
+                                  generateCodeData(arguments['is_valid_day']);
+
+                              isExpired = false;
+                            });
+                          },
+                          child: const Text('Generate again'),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        const SizedBox(height: 32),
+                        const Text(
+                          'This code will expire in:',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        buildTimer(),
+                        const SizedBox(height: 24),
+                        QrImage(
+                          data: qrData,
+                          size: 300,
+                          backgroundColor: Colors.white,
+                        ),
+                      ],
+                    )
               : Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
@@ -127,6 +201,20 @@ class _KeyCodeState extends State<KeyCode> {
                   ),
                 ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTimer() {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return Text(
+      '$minutes:$seconds',
+      style: const TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
