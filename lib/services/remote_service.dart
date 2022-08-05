@@ -25,13 +25,6 @@ class RemoteService {
   }
 
   Future<User?> getUser(http.Client client) async {
-    Uri uri = Uri.parse('https://keymanager.theiotproject.com/api/user');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-
     String fileName = "userPath.json";
     var dir = await getTemporaryDirectory();
     File file = File('${dir.path}/${fileName}');
@@ -39,6 +32,12 @@ class RemoteService {
     var internetConnection = await Connectivity().checkConnectivity();
     if (internetConnection != ConnectivityResult.none) {
       print('fetch from api');
+      Uri uri = Uri.parse('https://keymanager.theiotproject.com/api/user');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
 
       if (response.statusCode == 200) {
         String json = response.body;
@@ -55,14 +54,6 @@ class RemoteService {
   }
 
   Future<List<Team>?> getTeams(http.Client client, userId) async {
-    Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/teams/userId/${userId}');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-
     String fileName = "teamsPath.json";
     var dir = await getTemporaryDirectory();
     File file = File('${dir.path}/${fileName}');
@@ -70,6 +61,13 @@ class RemoteService {
     var internetConnection = await Connectivity().checkConnectivity();
     if (internetConnection != ConnectivityResult.none) {
       print('fetch from api');
+      Uri uri = Uri.parse(
+          'https://keymanager.theiotproject.com/api/teams/userId/${userId}');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
 
       if (response.statusCode == 200) {
         String json = response.body;
