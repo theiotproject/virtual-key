@@ -27,6 +27,8 @@ dependencies:
   http: ^0.13.4
   uuid: ^3.0.6
   flutter_secure_storage: ^5.0.2
+  path_provider: ^2.0.11
+  connectivity_plus: ^2.2.1
   cupertino_icons: ^1.0.2
 
 dev_dependencies:

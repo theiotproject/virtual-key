@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/user.dart';
 import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:http/http.dart' as http;
 import 'package:virtual_key/models/virtual_key.dart';
+import 'package:path_provider/path_provider.dart';
 
 class RemoteService {
   Future<http.Response> login(String email, String password, String device) {
@@ -28,9 +31,26 @@ class RemoteService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
-    if (response.statusCode == 200) {
-      String json = response.body;
-      return userFromJson(json);
+
+    String fileName = "userPath.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
+
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      print('fetch from api');
+
+      if (response.statusCode == 200) {
+        String json = response.body;
+
+        file.writeAsStringSync(json, flush: true, mode: FileMode.write);
+        return userFromJson(json);
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return userFromJson(data);
     }
   }
 
@@ -43,9 +63,25 @@ class RemoteService {
       'Authorization': 'Bearer $token',
     });
 
-    if (response.statusCode == 200) {
-      String json = response.body;
-      return teamFromJson(json);
+    String fileName = "teamsPath.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
+
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      print('fetch from api');
+
+      if (response.statusCode == 200) {
+        String json = response.body;
+
+        file.writeAsStringSync(json, flush: true, mode: FileMode.write);
+        return teamFromJson(json);
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return teamFromJson(data);
     }
   }
 
