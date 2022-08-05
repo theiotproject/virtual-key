@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -88,8 +90,15 @@ class _KeyCodeState extends State<KeyCode> {
 
     sendEvent(uuid, virtualKeyId!, isValid);
 
+    String teamCode = "J384CP1S";
+    String keyData = 'OPEN:ID:$uuid;VF:$validFrom;VT:$validTo;L:$gNum;';
+
+    String dataToHash = '$keyData$teamCode';
+    List<int> dataInBytes = utf8.encode(dataToHash);
+    Digest digestedData = sha256.convert(dataInBytes);
+
     if (isValid) {
-      return 'OPEN:ID:$uuid;VF:$validFrom;VT:$validTo;L:$gNum;';
+      return '${keyData}S:${digestedData.toString()};';
     } else {
       return 'ACCESS DENIED';
     }
