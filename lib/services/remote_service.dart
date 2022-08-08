@@ -261,7 +261,49 @@ class RemoteService {
     );
   }
 
-  Future<http.Response> sendBackupCodeGenerationEvent(
+  Future sendBackupCodeGenerationEvent(
+      String id, String magicCode, String message, int userId) async {
+    String fileName = "magicCodeEventPath.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
+
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none &&
+        file.existsSync() == false) {
+      generateMagicUsageEvent(id, magicCode, message, userId);
+    } else if (internetConnection != ConnectivityResult.none &&
+        file.existsSync() == true) {
+      // send previous events
+      String fileData = file.readAsStringSync();
+      fileData = fileData.substring(0, fileData.length - 1);
+
+      List<String> events = fileData.split('@');
+      events.forEach((event) async {
+        final parsedJson = jsonDecode(event);
+
+        await generateMagicUsageEvent(
+            parsedJson['id'],
+            parsedJson['magic_code'],
+            parsedJson['message'],
+            parsedJson['user_id']);
+      });
+
+      file.delete();
+
+      // send current event
+      await generateMagicUsageEvent(id, magicCode, message, userId);
+    } else {
+      final data = jsonEncode(<String, dynamic>{
+        'id': id,
+        'magic_code': magicCode,
+        'message': message,
+        'user_id': userId
+      });
+      file.writeAsStringSync('${data}@', flush: true, mode: FileMode.append);
+    }
+  }
+
+  Future<http.Response> generateMagicUsageEvent(
       String id, String magicCode, String message, int userId) {
     return http.post(
       Uri.parse('https://keymanager.theiotproject.com/api/magicCodeUsages'),
