@@ -210,20 +210,7 @@ class RemoteService {
     var internetConnection = await Connectivity().checkConnectivity();
     if (internetConnection != ConnectivityResult.none &&
         file.existsSync() == false) {
-      return http.post(
-        Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'id': id,
-          'virtual_key_id': virtualKeyId,
-          'access_granted': accessGranted,
-          'message': message
-        }),
-      );
+      generateKeyUsageEvent(id, virtualKeyId, accessGranted, message);
     } else if (internetConnection != ConnectivityResult.none &&
         file.existsSync() == true) {
       // send previous events
@@ -231,42 +218,20 @@ class RemoteService {
       fileData = fileData.substring(0, fileData.length - 1);
 
       List<String> events = fileData.split('@');
-      events.forEach((event) {
+      events.forEach((event) async {
         final parsedJson = jsonDecode(event);
 
-        http.post(
-          Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-          body: jsonEncode(<String, dynamic>{
-            'id': parsedJson['id'],
-            'virtual_key_id': parsedJson['virtualKeyId'],
-            'access_granted': parsedJson['accessGranted'],
-            'message': parsedJson['message']
-          }),
-        );
+        await generateKeyUsageEvent(
+            parsedJson['id'],
+            parsedJson['virtual_key_id'],
+            parsedJson['access_granted'],
+            parsedJson['message']);
       });
 
       file.delete();
 
       // send current event
-      return http.post(
-        Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'id': id,
-          'virtual_key_id': virtualKeyId,
-          'access_granted': accessGranted,
-          'message': message
-        }),
-      );
+      await generateKeyUsageEvent(id, virtualKeyId, accessGranted, message);
     } else {
       final data = jsonEncode(<String, dynamic>{
         'id': id,
@@ -276,6 +241,24 @@ class RemoteService {
       });
       file.writeAsStringSync('${data}@', flush: true, mode: FileMode.append);
     }
+  }
+
+  Future<http.Response> generateKeyUsageEvent(
+      String id, int virtualKeyId, bool accessGranted, String message) {
+    return http.post(
+      Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': id,
+        'virtual_key_id': virtualKeyId,
+        'access_granted': accessGranted,
+        'message': message
+      }),
+    );
   }
 
   Future<http.Response> sendBackupCodeGenerationEvent(
