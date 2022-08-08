@@ -201,22 +201,81 @@ class RemoteService {
     }
   }
 
-  Future<http.Response> sendKeyCodeGenerationEvent(
-      String id, int virtualKeyId, bool accessGranted, String message) {
-    return http.post(
-      Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(<String, dynamic>{
+  Future sendKeyCodeGenerationEvent(
+      String id, int virtualKeyId, bool accessGranted, String message) async {
+    String fileName = "keyCodeEventPath.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
+
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none &&
+        file.existsSync() == false) {
+      return http.post(
+        Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': id,
+          'virtual_key_id': virtualKeyId,
+          'access_granted': accessGranted,
+          'message': message
+        }),
+      );
+    } else if (internetConnection != ConnectivityResult.none &&
+        file.existsSync() == true) {
+      // send previous events
+      String fileData = file.readAsStringSync();
+      fileData = fileData.substring(0, fileData.length - 1);
+
+      List<String> events = fileData.split('@');
+      events.forEach((event) {
+        final parsedJson = jsonDecode(event);
+
+        http.post(
+          Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(<String, dynamic>{
+            'id': parsedJson['id'],
+            'virtual_key_id': parsedJson['virtualKeyId'],
+            'access_granted': parsedJson['accessGranted'],
+            'message': parsedJson['message']
+          }),
+        );
+      });
+
+      file.delete();
+
+      // send current event
+      return http.post(
+        Uri.parse('https://keymanager.theiotproject.com/api/keyUsages'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': id,
+          'virtual_key_id': virtualKeyId,
+          'access_granted': accessGranted,
+          'message': message
+        }),
+      );
+    } else {
+      final data = jsonEncode(<String, dynamic>{
         'id': id,
         'virtual_key_id': virtualKeyId,
         'access_granted': accessGranted,
         'message': message
-      }),
-    );
+      });
+      file.writeAsStringSync('${data}@', flush: true, mode: FileMode.append);
+    }
   }
 
   Future<http.Response> sendBackupCodeGenerationEvent(
