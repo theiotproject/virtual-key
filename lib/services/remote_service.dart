@@ -84,61 +84,120 @@ class RemoteService {
   }
 
   Future<List<VirtualKey>?> getKeys(http.Client client, teamId) async {
-    Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/virtualKeys/teamId/${teamId}/token');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
+    String fileName = "keys${teamId}Path.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
 
-    if (response.statusCode == 200) {
-      String json = response.body;
-      return virtualKeyFromJson(json);
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      print('fetch from api');
+      Uri uri = Uri.parse(
+          'https://keymanager.theiotproject.com/api/virtualKeys/teamId/${teamId}/token');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        String json = response.body;
+
+        file.writeAsStringSync(json, flush: true, mode: FileMode.write);
+        return virtualKeyFromJson(json);
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return virtualKeyFromJson(data);
     }
   }
 
   Future<List<Gate>?> getKeyGates(http.Client client, virtualKeyId) async {
-    Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/gates/virtualKeyId/${virtualKeyId}');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
+    String fileName = "keyGates${virtualKeyId}Path.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
 
-    if (response.statusCode == 200) {
-      String json = response.body;
-      return gateFromJson(json);
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      print('fetch from api');
+      Uri uri = Uri.parse(
+          'https://keymanager.theiotproject.com/api/gates/virtualKeyId/${virtualKeyId}');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        String json = response.body;
+
+        file.writeAsStringSync(json, flush: true, mode: FileMode.write);
+        return gateFromJson(json);
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return gateFromJson(data);
     }
   }
 
   Future<String?> checkAdmin(http.Client client, teamId) async {
-    Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/auth/permission/teamId/${teamId}/request');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
+    String fileName = "checkAdmin${teamId}Path.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
 
-    if (response.statusCode == 200) {
-      return response.body;
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      print('fetch from api');
+      Uri uri = Uri.parse(
+          'https://keymanager.theiotproject.com/api/auth/permission/teamId/${teamId}/request');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        file.writeAsStringSync(response.body,
+            flush: true, mode: FileMode.write);
+        return response.body;
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return data;
     }
   }
 
   Future<List<Gate>?> getGates(http.Client client, teamId) async {
-    Uri uri = Uri.parse(
-        'https://keymanager.theiotproject.com/api/gates/teamId/${teamId}');
-    http.Response response = await client.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
+    String fileName = "gates${teamId}Path.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
 
-    if (response.statusCode == 200) {
-      String json = response.body;
-      return gateFromJson(json);
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      Uri uri = Uri.parse(
+          'https://keymanager.theiotproject.com/api/gates/teamId/${teamId}');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        String json = response.body;
+
+        file.writeAsStringSync(json, flush: true, mode: FileMode.write);
+        return gateFromJson(json);
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return gateFromJson(data);
     }
   }
 
