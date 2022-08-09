@@ -30,6 +30,7 @@ class _KeyCodeState extends State<KeyCode> {
   bool isFunctionCalled = false;
   bool isExpired = false;
 
+  String? teamCode;
   String now = DateTime.now().toString().substring(0, 19);
   String qrData = '';
 
@@ -44,7 +45,10 @@ class _KeyCodeState extends State<KeyCode> {
 
   getData() async {
     gates = await RemoteService().getKeyGates(http.Client(), selectedKeyId);
-    if (gates != null) {
+
+    teamCode = await RemoteService().getTeamCode(http.Client(), selectedTeamId);
+
+    if (gates != null && teamCode != null) {
       gates?.forEach((element) => gatesNumbers.add(element.serialNumber));
       setState(() {
         isLoaded = true;
@@ -90,8 +94,7 @@ class _KeyCodeState extends State<KeyCode> {
     });
 
     sendEvent(uuid, virtualKeyId!, isValid);
-
-    String teamCode = "J384CP1S";
+    
     String keyData = 'OPEN:ID:$uuid;VF:$validFrom;VT:$validTo;L:$gNum;';
 
     String dataToHash = '$keyData$teamCode';
