@@ -14,6 +14,7 @@ class Team {
     required this.personalTeam,
     required this.createdAt,
     required this.updatedAt,
+    required this.teamCode,
   });
 
   int id;
@@ -22,6 +23,7 @@ class Team {
   bool personalTeam;
   DateTime createdAt;
   DateTime updatedAt;
+  String teamCode;
 
   @override
   bool operator ==(Object other) => other is Team && other.name == name;
@@ -36,6 +38,7 @@ class Team {
         personalTeam: json["personal_team"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        teamCode: json["team_code"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +48,6 @@ class Team {
         "personal_team": personalTeam,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
+        "team_code": teamCode,
       };
 }

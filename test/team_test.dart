@@ -11,6 +11,7 @@ void main() {
     personalTeam: true,
     createdAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
     updatedAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
+    teamCode: '20TEST10QW',
   );
 
   group('fromJson', () {
@@ -40,6 +41,7 @@ void main() {
           'personal_team': true,
           'created_at': '2022-01-01T01:01:01.000Z',
           'updated_at': '2022-01-01T01:01:01.000Z',
+          'team_code': '20TEST10QW',
         };
 
         expect(resultTeamModel, expectedTeamModel);
