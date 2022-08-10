@@ -31,17 +31,20 @@
   </td>
 </tr></table></div>
   
+  
 ## Table of contents
 
 - [About](#about)
 - [Installation](#installation)
 - [Contributing](#contributing)
+- [License](#license)
 - [Thanks](#thanks)
 
 
 ## About
 
 Flutter app for both iOS and Android created as a virtual key for our IoT project!
+
 
 ## Installation
 
@@ -56,11 +59,17 @@ Flutter app for both iOS and Android created as a virtual key for our IoT projec
 4. Download all dependencies listed in the pubspec by running:  
    ```flutter pub get```
    
+   
 ## Contributing
 
 Pull requests are welcome.
 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/theiotproject/virtual-key/blob/main/LICENSE.md) - file for details
+
+
 ## Thanks
 
 Thanks to all contributors and their support.
-
