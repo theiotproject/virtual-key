@@ -37,7 +37,7 @@ class _ConfigCodeState extends State<ConfigCode> {
   }
 
   generateConfigCodeData(String magicCode, String serialNumber) {
-    return 'CONF:MAGIC:$magicCode;TEAM:$teamCode;SERIAL:$serialNumber;;';
+    return 'CONF:$magicCode;$teamCode;$serialNumber;;';
   }
 
   sendEvent(String magicCode) async {
