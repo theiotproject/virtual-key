@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
@@ -53,23 +54,47 @@ class _AdminGatesState extends State<AdminGates> {
                   itemBuilder: (context, index) {
                     return Card(
                       elevation: 5,
-                      child: ListTile(
-                        title: Text(
-                          gates![index].name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      child: Slidable(
+                        // Swipe from left to right to open config menu
+                        startActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          extentRatio: 0.2,
+                          children: [
+                            SlidableAction(
+                              onPressed: (context) {
+                                Navigator.pushNamed(context, '/config_code',
+                                    arguments: {
+                                      "name": gates![index].name,
+                                      "magic_code": gates![index].magicCode,
+                                      "serial_number":
+                                          gates![index].serialNumber,
+                                    });
+                              },
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              icon: Icons.settings,
+                              //label: 'Config',
+                            ),
+                          ],
                         ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/gate_code',
-                              arguments: {
-                                "name": gates![index].name,
-                                "magic_code": gates![index].magicCode,
-                              });
-                        },
+                        child: ListTile(
+                          title: Text(
+                            gates![index].name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, '/gate_code',
+                                arguments: {
+                                  "name": gates![index].name,
+                                  "magic_code": gates![index].magicCode,
+                                });
+                          },
+                        ),
                       ),
                     );
                   }),

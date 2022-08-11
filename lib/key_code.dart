@@ -47,6 +47,8 @@ class _KeyCodeState extends State<KeyCode> {
     gates = await RemoteService().getKeyGates(http.Client(), selectedKeyId);
 
     teamCode = await RemoteService().getTeamCode(http.Client(), selectedTeamId);
+    print(selectedKeyId);
+    print(teamCode);
 
     if (gates != null && teamCode != null) {
       gates?.forEach((element) => gatesNumbers.add(element.serialNumber));
@@ -94,7 +96,7 @@ class _KeyCodeState extends State<KeyCode> {
     });
 
     sendEvent(uuid, virtualKeyId!, isValid);
-    
+
     String keyData = 'OPEN:ID:$uuid;VF:$validFrom;VT:$validTo;L:$gNum;';
 
     String dataToHash = '$keyData$teamCode';
