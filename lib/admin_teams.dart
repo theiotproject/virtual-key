@@ -76,36 +76,6 @@ class _AdminTeamsState extends State<AdminTeams> {
                           Navigator.pushNamed(context, '/admin_gates');
                         },
                       ),
-
-                      //Drop down list design for future use
-                      /*
-                      key: PageStorageKey(0),
-                      color: Colors.white,
-                      elevation: 4,
-                      child: ExpansionTile(
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        childrenPadding:
-                            const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        expandedCrossAxisAlignment: CrossAxisAlignment.end,
-                        maintainState: true,
-                        title: Text(
-                          adminTeams[index].name,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        children: const [
-                          Text(
-                            "gatename",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      */
                     );
                   }),
             ),

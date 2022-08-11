@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_key/admin_gates.dart';
 import 'package:virtual_key/admin_teams.dart';
+import 'package:virtual_key/config_code.dart';
 import 'package:virtual_key/emergency_open.dart';
 import 'package:virtual_key/gate_code.dart';
 import 'package:virtual_key/home.dart';
@@ -50,12 +51,13 @@ class MyApp extends StatelessWidget {
       routes: {
         '/splash_screen': (context) => const SplashScreen(),
         '/': (context) => const Home(),
-        '/emergency_open': (context) => const EmergencyOpen(),
         '/login': (context) => const Login(),
+        '/emergency_open': (context) => const EmergencyOpen(),
         '/user_hub': (context) => const UserHub(),
         '/admin_teams': (context) => const AdminTeams(),
         '/admin_gates': (context) => const AdminGates(),
         '/gate_code': (context) => const GateCode(),
+        '/config_code': (context) => const ConfigCode(),
         '/user_teams': (context) => const UserTeams(),
         '/user_keys': (context) => const UserKeys(),
         '/key_code': (context) => const KeyCode()
