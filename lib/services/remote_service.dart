@@ -349,4 +349,24 @@ class RemoteService {
       }),
     );
   }
+
+  Future<http.Response> remoteOpen(String id, String validFrom, String validTo,
+      String gate, int teamId, int virtualKeyId) {
+    return http.post(
+      Uri.parse('https://keymanager.theiotproject.com/api/remoteOpen'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': id,
+        'valid_from': validFrom,
+        'valid_to': validTo,
+        'gate': gate,
+        'team_id': teamId,
+        'virtual_key_id': virtualKeyId
+      }),
+    );
+  }
 }
