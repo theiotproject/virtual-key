@@ -20,6 +20,7 @@ class _UserKeysState extends State<UserKeys> {
   List<VirtualKey>? keys;
   List<Gate>? keyGates;
   bool isLoaded = false;
+  String? remoteGate;
 
   late ConnectivityResult internetConnection;
 
@@ -60,7 +61,7 @@ class _UserKeysState extends State<UserKeys> {
     return validDays.contains(days[weekday]);
   }
 
-  openGateRemotely(String gate, int virtualKeyId) async {
+  openGateRemotely(String gate) async {
     String uuid = const Uuid().v1();
     String validFrom = DateTime.now().toString().substring(0, 19);
     String validTo = DateTime.now()
@@ -68,8 +69,8 @@ class _UserKeysState extends State<UserKeys> {
         .toString()
         .substring(0, 19);
 
-    await RemoteService().remoteOpen(
-        uuid, validFrom, validTo, gate, selectedKeyId!, virtualKeyId);
+    await RemoteService()
+        .remoteOpen(uuid, validFrom, validTo, gate, selectedTeamId!);
   }
 
   sendEvent(String id, int virtualKeyId, bool accessGranted) async {
@@ -116,9 +117,19 @@ class _UserKeysState extends State<UserKeys> {
                                 // Open gate remotely when internet connection is available
                                 if (internetConnection !=
                                     ConnectivityResult.none) {
-                                  getKeyGates(keys![index].id).then((value) {
-                                    showGatesAlertDialog(context);
-                                  });
+                                  String uuid = const Uuid().v1();
+                                  String validDays = keys![index].validDays;
+
+                                  bool accessGranted = isValidDay(validDays);
+
+                                  if (accessGranted) {
+                                    getKeyGates(keys![index].id).then((value) {
+                                      showGatesAlertDialog(context);
+                                    });
+                                  }
+
+                                  sendEvent(
+                                      uuid, keys![index].id, accessGranted);
                                 }
                               },
                               backgroundColor: Colors.blue,
@@ -176,13 +187,13 @@ class _UserKeysState extends State<UserKeys> {
         child: ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.all(16),
-            itemCount: keys?.length,
+            itemCount: keyGates?.length,
             itemBuilder: (context, index) {
               return Card(
                 elevation: 1,
                 child: ListTile(
                   title: Text(
-                    keys![index].label,
+                    keyGates![index].name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -190,7 +201,9 @@ class _UserKeysState extends State<UserKeys> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context, keyGates?[index].serialNumber);
+                  },
                 ),
               );
             }),
@@ -206,6 +219,9 @@ class _UserKeysState extends State<UserKeys> {
       builder: (BuildContext context) {
         return alert;
       },
-    );
+    ).then((valueFromDialog) {
+      openGateRemotely(valueFromDialog);
+    });
+    ;
   }
 }

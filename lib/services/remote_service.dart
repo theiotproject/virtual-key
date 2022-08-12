@@ -350,8 +350,8 @@ class RemoteService {
     );
   }
 
-  Future<http.Response> remoteOpen(String id, String validFrom, String validTo,
-      String gate, int teamId, int virtualKeyId) {
+  Future<http.Response> remoteOpen(
+      String id, String validFrom, String validTo, String gate, int teamId) {
     return http.post(
       Uri.parse('https://keymanager.theiotproject.com/api/remoteOpen'),
       headers: <String, String>{
@@ -365,7 +365,6 @@ class RemoteService {
         'valid_to': validTo,
         'gate': gate,
         'team_id': teamId,
-        'virtual_key_id': virtualKeyId
       }),
     );
   }
