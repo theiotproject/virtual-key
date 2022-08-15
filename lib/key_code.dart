@@ -46,7 +46,7 @@ class _KeyCodeState extends State<KeyCode> {
   getData() async {
     gates = await RemoteService().getKeyGates(http.Client(), selectedKeyId);
 
-    teamCode = await RemoteService().getTeamCode(http.Client(), selectedTeamId);
+    teamCode = await RemoteService().getTeamCode(http.Client(), selectedTeamId, selectedKeyId);
 
     if (gates != null && teamCode != null) {
       gates?.forEach((element) => gatesNumbers.add(element.serialNumber));

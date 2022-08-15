@@ -143,8 +143,8 @@ class RemoteService {
     }
   }
 
-  Future<String?> getTeamCode(http.Client client, teamId) async {
-    String fileName = "getTeamCode${teamId}Path.json";
+  Future<String?> getTeamCode(http.Client client, teamId, virtualKeyId) async {
+    String fileName = "getKeyTeamCode${teamId}Path.json";
     var dir = await getTemporaryDirectory();
     File file = File('${dir.path}/${fileName}');
 
@@ -152,7 +152,36 @@ class RemoteService {
     if (internetConnection != ConnectivityResult.none) {
       print('fetch from api');
       Uri uri = Uri.parse(
-          'https://keymanager.theiotproject.com/api/virtualKeys/code/${teamId}');
+          'https://keymanager.theiotproject.com/api/teams/code/${teamId}/${virtualKeyId}');
+      http.Response response = await client.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        file.writeAsStringSync(response.body,
+            flush: true, mode: FileMode.write);
+        return response.body;
+      }
+    } else if (file.existsSync()) {
+      print('reading from cache');
+
+      final data = file.readAsStringSync();
+      return data;
+    }
+  }
+
+  Future<String?> getAdminTeamCode(http.Client client, teamId) async {
+    String fileName = "getAdminTeamCode${teamId}Path.json";
+    var dir = await getTemporaryDirectory();
+    File file = File('${dir.path}/${fileName}');
+
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection != ConnectivityResult.none) {
+      print('fetch from api');
+      Uri uri = Uri.parse(
+          'https://keymanager.theiotproject.com/api/teams/code/${teamId}');
       http.Response response = await client.get(uri, headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -346,6 +375,25 @@ class RemoteService {
         'magic_code': magicCode,
         'message': message,
         'user_id': userId
+      }),
+    );
+  }
+
+  Future<http.Response> remoteOpen(
+      String id, String validFrom, String validTo, String gate, int teamId) {
+    return http.post(
+      Uri.parse('https://keymanager.theiotproject.com/api/remoteOpen'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': id,
+        'valid_from': validFrom,
+        'valid_to': validTo,
+        'gate': gate,
+        'team_id': teamId,
       }),
     );
   }
