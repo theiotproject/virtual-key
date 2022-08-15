@@ -27,7 +27,7 @@ class _ConfigCodeState extends State<ConfigCode> {
   }
 
   getData() async {
-    teamCode = await RemoteService().getTeamCode(http.Client(), adminTeamId);
+    teamCode = await RemoteService().getAdminTeamCode(http.Client(), adminTeamId);
 
     if (teamCode != null) {
       setState(() {
