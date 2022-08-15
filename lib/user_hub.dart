@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:virtual_key/admin_teams.dart';
 import 'package:virtual_key/user_teams.dart';
 import 'package:virtual_key/globals.dart';
@@ -25,6 +26,7 @@ class _UserHubState extends State<UserHub> {
         user = null;
 
         deleteTokenFromStorage();
+        deleteCachedData();
 
         Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
       } else {
@@ -36,6 +38,12 @@ class _UserHubState extends State<UserHub> {
   Future<void> deleteTokenFromStorage() async {
     await storage.write(key: 'KEY_TOKEN', value: '');
   }
+
+  Future<void> deleteCachedData() async {
+      var dir = await getTemporaryDirectory();
+        dir.deleteSync(recursive: true);
+  }
+
 
   @override
   Widget build(BuildContext context) {
