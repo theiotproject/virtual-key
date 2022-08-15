@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:virtual_key/services/remote_service.dart';
@@ -61,24 +62,32 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                if (emailController.text.isNotEmpty &&
-                    passwordController.text.isNotEmpty) {
-                  http.Response response = await RemoteService().login(
-                      emailController.text,
-                      passwordController.text,
-                      "phonename");
+                var internetConnection =
+                    await Connectivity().checkConnectivity();
+                if (internetConnection != ConnectivityResult.none) {
+                  if (emailController.text.isNotEmpty &&
+                      passwordController.text.isNotEmpty) {
+                    http.Response response = await RemoteService().login(
+                        emailController.text,
+                        passwordController.text,
+                        "phonename");
 
-                  token = response.body;
-                }
-                await storage.write(key: 'KEY_TOKEN', value: token);
+                    token = response.body;
+                  }
+                  await storage.write(key: 'KEY_TOKEN', value: token);
 
-                user = await RemoteService().getUser(http.Client());
-                if (user != null) {
-                  isLogged = true;
-                  Navigator.pushReplacementNamed(context, '/user_hub');
+                  user = await RemoteService().getUser(http.Client());
+                  if (user != null) {
+                    isLogged = true;
+                    Navigator.pushReplacementNamed(context, '/user_hub');
+                  } else {
+                    setState(() {
+                      errorMsg = 'Provided login details are not valid';
+                    });
+                  }
                 } else {
                   setState(() {
-                    errorMsg = 'Provided login details are not valid';
+                    errorMsg = 'No internet connection';
                   });
                 }
               },

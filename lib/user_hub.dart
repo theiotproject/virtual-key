@@ -47,27 +47,33 @@ class _UserHubState extends State<UserHub> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: children[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: onTappedBar,
-        currentIndex: currentIndex,
-        items: const [
-          BottomNavigationBarItem(
-            label: '',
-            icon: Icon(Icons.lock),
-          ),
-          BottomNavigationBarItem(
-            label: '',
-            icon: Icon(Icons.key),
-          ),
-          BottomNavigationBarItem(
-            label: '',
-            icon: Icon(Icons.logout),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        // block system back arrow
+        return false;
+      },
+      child: Scaffold(
+        body: children[currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          onTap: onTappedBar,
+          currentIndex: currentIndex,
+          items: const [
+            BottomNavigationBarItem(
+              label: '',
+              icon: Icon(Icons.lock),
+            ),
+            BottomNavigationBarItem(
+              label: '',
+              icon: Icon(Icons.key),
+            ),
+            BottomNavigationBarItem(
+              label: '',
+              icon: Icon(Icons.logout),
+            ),
+          ],
+        ),
       ),
     );
   }
