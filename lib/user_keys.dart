@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:virtual_key/models/gate.dart';
@@ -8,6 +10,7 @@ import 'package:virtual_key/models/virtual_key.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/widgets/no_cache_and_internet_msg.dart';
 
 class UserKeys extends StatefulWidget {
   const UserKeys({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class _UserKeysState extends State<UserKeys> {
   List<VirtualKey>? keys;
   List<Gate>? keyGates;
   bool isLoaded = false;
+  bool isCacheClearAndConnLost = false;
   String? remoteGate;
 
   late ConnectivityResult internetConnection;
@@ -34,11 +38,22 @@ class _UserKeysState extends State<UserKeys> {
 
   getData() async {
     keys = await RemoteService().getKeys(http.Client(), selectedTeamId);
-    internetConnection = await Connectivity().checkConnectivity();
     if (keys != null) {
       setState(() {
         isLoaded = true;
       });
+    }
+    // check if data is cached
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection == ConnectivityResult.none) {
+      String fileName = "keys${selectedTeamId}Path.json";
+      var dir = await getTemporaryDirectory();
+      File file = File('${dir.path}/${fileName}');
+      if (!file.existsSync()) {
+        setState(() {
+          isCacheClearAndConnLost = true;
+        });
+      }
     }
   }
 
@@ -93,77 +108,82 @@ class _UserKeysState extends State<UserKeys> {
       body: Column(
         children: [
           const Divider(),
-          Visibility(
-            visible: isLoaded,
-            replacement: const Center(
-              child: CircularProgressIndicator(),
-            ),
-            child: Expanded(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(16),
-                  itemCount: keys?.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 5,
-                      child: Slidable(
-                        // Swipe from left to right to show remote openning button
-                        startActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-                          extentRatio: 0.2,
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) {
-                                // Open gate remotely when internet connection is available
-                                if (internetConnection !=
-                                    ConnectivityResult.none) {
-                                  String uuid = const Uuid().v1();
-                                  String validDays = keys![index].validDays;
+          isCacheClearAndConnLost
+              ? const NoCacheAndInternet()
+              : Visibility(
+                  visible: isLoaded,
+                  replacement: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  child: Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(16),
+                        itemCount: keys?.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 5,
+                            child: Slidable(
+                              // Swipe from left to right to show remote openning button
+                              startActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                extentRatio: 0.2,
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      // Open gate remotely when internet connection is available
+                                      if (internetConnection !=
+                                          ConnectivityResult.none) {
+                                        String uuid = const Uuid().v1();
+                                        String validDays =
+                                            keys![index].validDays;
 
-                                  bool accessGranted = isValidDay(validDays);
+                                        bool accessGranted =
+                                            isValidDay(validDays);
 
-                                  if (accessGranted) {
-                                    getKeyGates(keys![index].id).then((value) {
-                                      showGatesAlertDialog(context);
-                                    });
-                                  }
+                                        if (accessGranted) {
+                                          getKeyGates(keys![index].id)
+                                              .then((value) {
+                                            showGatesAlertDialog(context);
+                                          });
+                                        }
 
-                                  sendEvent(
-                                      uuid, keys![index].id, accessGranted);
-                                }
-                              },
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                              icon: Icons.wifi,
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            keys![index].label,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onTap: () {
-                            selectedKeyId = keys![index].id;
-                            Navigator.pushNamed(context, '/key_code',
-                                arguments: {
-                                  "label": keys![index].label,
-                                  "is_valid_day": isValidDay(
-                                    keys![index].validDays,
+                                        sendEvent(uuid, keys![index].id,
+                                            accessGranted);
+                                      }
+                                    },
+                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.wifi,
                                   ),
-                                });
-                          },
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-          ),
+                                ],
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  keys![index].label,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onTap: () {
+                                  selectedKeyId = keys![index].id;
+                                  Navigator.pushNamed(context, '/key_code',
+                                      arguments: {
+                                        "label": keys![index].label,
+                                        "is_valid_day": isValidDay(
+                                          keys![index].validDays,
+                                        ),
+                                      });
+                                },
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
         ],
       ),
     );
