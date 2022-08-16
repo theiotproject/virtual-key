@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:virtual_key/globals.dart';
@@ -10,6 +12,7 @@ import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/widgets/no_cache_and_internet_msg.dart';
 
 class KeyCode extends StatefulWidget {
   const KeyCode({Key? key}) : super(key: key);
@@ -29,6 +32,7 @@ class _KeyCodeState extends State<KeyCode> {
   bool showCode = false;
   bool isFunctionCalled = false;
   bool isExpired = false;
+  bool isCacheClearAndConnLost = false;
 
   String? teamCode;
   String now = DateTime.now().toString().substring(0, 19);
@@ -46,13 +50,28 @@ class _KeyCodeState extends State<KeyCode> {
   getData() async {
     gates = await RemoteService().getKeyGates(http.Client(), selectedKeyId);
 
-    teamCode = await RemoteService().getTeamCode(http.Client(), selectedTeamId, selectedKeyId);
+    teamCode = await RemoteService()
+        .getTeamCode(http.Client(), selectedTeamId, selectedKeyId);
 
     if (gates != null && teamCode != null) {
       gates?.forEach((element) => gatesNumbers.add(element.serialNumber));
       setState(() {
         isLoaded = true;
       });
+    }
+    // check if data is cached
+    var internetConnection = await Connectivity().checkConnectivity();
+    if (internetConnection == ConnectivityResult.none) {
+      String fileNameCode = "getTeamCode${selectedTeamId}Path.json";
+      String fileNameGates = "keyGates${selectedKeyId}Path.json";
+      var dir = await getTemporaryDirectory();
+      File fileCode = File('${dir.path}/${fileNameCode}');
+      File fileGates = File('${dir.path}/${fileNameGates}');
+      if (!fileCode.existsSync() || !fileGates.existsSync()) {
+        setState(() {
+          isCacheClearAndConnLost = true;
+        });
+      }
     }
   }
 
@@ -147,74 +166,76 @@ class _KeyCodeState extends State<KeyCode> {
     }
     return Scaffold(
       appBar: CustomAppBar('${arguments['label']}', true),
-      body: Visibility(
-        visible: isLoaded,
-        replacement: const Center(
-          child: CircularProgressIndicator(),
-        ),
-        child: Center(
-          child: arguments['is_valid_day']
-              ? isExpired
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Code expired',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        ElevatedButton(
-                          onPressed: () {
-                            duration = const Duration(minutes: 1);
-                            startTimer();
-                            setState(() {
-                              qrData =
-                                  generateCodeData(arguments['is_valid_day']);
+      body: isCacheClearAndConnLost
+          ? const Center(child: NoCacheAndInternet())
+          : Visibility(
+              visible: isLoaded,
+              replacement: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              child: Center(
+                child: arguments['is_valid_day']
+                    ? isExpired
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Code expired',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              ElevatedButton(
+                                onPressed: () {
+                                  duration = const Duration(minutes: 1);
+                                  startTimer();
+                                  setState(() {
+                                    qrData = generateCodeData(
+                                        arguments['is_valid_day']);
 
-                              isExpired = false;
-                            });
-                          },
-                          child: const Text('Generate again'),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        const SizedBox(height: 32),
-                        const Text(
-                          'This code will expire in:',
-                          style: TextStyle(
+                                    isExpired = false;
+                                  });
+                                },
+                                child: const Text('Generate again'),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              const SizedBox(height: 32),
+                              const Text(
+                                'This code will expire in:',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              buildTimer(),
+                              const SizedBox(height: 24),
+                              QrImage(
+                                data: qrData,
+                                size: 300,
+                                backgroundColor: Colors.white,
+                              ),
+                            ],
+                          )
+                    : Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          'Your code doesn\'t work on ${checkDay()}s',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        buildTimer(),
-                        const SizedBox(height: 24),
-                        QrImage(
-                          data: qrData,
-                          size: 300,
-                          backgroundColor: Colors.white,
-                        ),
-                      ],
-                    )
-              : Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    'Your code doesn\'t work on ${checkDay()}s',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-        ),
-      ),
+                      ),
+              ),
+            ),
     );
   }
 

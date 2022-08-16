@@ -144,7 +144,7 @@ class RemoteService {
   }
 
   Future<String?> getTeamCode(http.Client client, teamId, virtualKeyId) async {
-    String fileName = "getKeyTeamCode${teamId}Path.json";
+    String fileName = "getTeamCode${teamId}Path.json";
     var dir = await getTemporaryDirectory();
     File file = File('${dir.path}/${fileName}');
 
