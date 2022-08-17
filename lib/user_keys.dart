@@ -26,8 +26,6 @@ class _UserKeysState extends State<UserKeys> {
   bool isCacheClearAndConnLost = false;
   String? remoteGate;
 
-  late ConnectivityResult internetConnection;
-
   @override
   void initState() {
     super.initState();
@@ -130,8 +128,9 @@ class _UserKeysState extends State<UserKeys> {
                                 extentRatio: 0.2,
                                 children: [
                                   SlidableAction(
-                                    onPressed: (context) {
+                                    onPressed: (context) async {
                                       // Open gate remotely when internet connection is available
+                                      var internetConnection = await Connectivity().checkConnectivity();
                                       if (internetConnection !=
                                           ConnectivityResult.none) {
                                         String uuid = const Uuid().v1();
@@ -144,7 +143,11 @@ class _UserKeysState extends State<UserKeys> {
                                         if (accessGranted) {
                                           getKeyGates(keys![index].id)
                                               .then((value) {
-                                            showGatesAlertDialog(context);
+                                            if(keyGates!.length > 1) {
+                                              showGatesAlertDialog(context);
+                                            } else {
+                                              openGateRemotely(keyGates![0].serialNumber);
+                                            }
                                           });
                                         }
 
