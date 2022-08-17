@@ -7,6 +7,7 @@ import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/widgets/empty_list_text.dart';
 import 'package:virtual_key/widgets/no_cache_and_internet_msg.dart';
 
 class UserTeams extends StatefulWidget {
@@ -19,6 +20,7 @@ class UserTeams extends StatefulWidget {
 class _UserTeamsState extends State<UserTeams> {
   List<Team>? teams;
   bool isLoaded = false;
+  bool isListEmpty = false;
   bool isCacheClearAndConnLost = false;
 
   @override
@@ -35,6 +37,9 @@ class _UserTeamsState extends State<UserTeams> {
       setState(() {
         isLoaded = true;
       });
+      if(teams!.isEmpty) {
+        isListEmpty = true;
+      }
     }
     // check if data is cached
     var internetConnection = await Connectivity().checkConnectivity();
@@ -64,7 +69,7 @@ class _UserTeamsState extends State<UserTeams> {
                   replacement: const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  child: Expanded(
+                  child: isListEmpty ? const EmptyListText(title: 'You don\'t have any teams') : Expanded(
                     child: ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: teams?.length,

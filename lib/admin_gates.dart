@@ -8,6 +8,7 @@ import 'package:virtual_key/models/gate.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/widgets/empty_list_text.dart';
 import 'package:virtual_key/widgets/no_cache_and_internet_msg.dart';
 
 class AdminGates extends StatefulWidget {
@@ -20,6 +21,7 @@ class AdminGates extends StatefulWidget {
 class _AdminGatesState extends State<AdminGates> {
   List<Gate>? gates;
   bool isLoaded = false;
+  bool isListEmpty = false;
   bool isCacheClearAndConnLost = false;
 
   @override
@@ -37,6 +39,9 @@ class _AdminGatesState extends State<AdminGates> {
       setState(() {
         isLoaded = true;
       });
+      if(gates!.isEmpty) {
+        isListEmpty = true;
+      }
     }
     // check if data is cached
     var internetConnection = await Connectivity().checkConnectivity();
@@ -66,7 +71,7 @@ class _AdminGatesState extends State<AdminGates> {
                   replacement: const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  child: Expanded(
+                  child: isListEmpty ? const EmptyListText(title: 'This team does not have any gates') : Expanded(
                     child: ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: gates?.length,

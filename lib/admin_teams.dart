@@ -7,6 +7,7 @@ import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtual_key/widgets/empty_list_text.dart';
 import 'package:virtual_key/widgets/no_cache_and_internet_msg.dart';
 
 class AdminTeams extends StatefulWidget {
@@ -20,6 +21,7 @@ class _AdminTeamsState extends State<AdminTeams> {
   List<Team>? teams;
   List<Team> adminTeams = [];
   bool isLoaded = false;
+  bool isListEmpty = true;
   bool isCacheClearAndConnLost = false;
 
   @override
@@ -39,6 +41,9 @@ class _AdminTeamsState extends State<AdminTeams> {
             await RemoteService().checkAdmin(http.Client(), element.id) == '1';
         if (isAdmin) {
           adminTeams.add(element);
+          isListEmpty = false;
+        }
+        if (element == teams?.last) {
           setState(() {
             isLoaded = true;
           });
@@ -73,7 +78,7 @@ class _AdminTeamsState extends State<AdminTeams> {
                   replacement: const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  child: Expanded(
+                  child: isListEmpty ? const EmptyListText(title: 'You are not admin in any team') : Expanded(
                     child: ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: adminTeams.length,
