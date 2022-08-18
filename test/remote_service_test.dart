@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
@@ -7,6 +8,54 @@ import 'package:virtual_key/models/team.dart';
 import 'package:virtual_key/models/user.dart';
 import 'package:virtual_key/models/virtual_key.dart';
 import 'package:virtual_key/services/remote_service.dart';
+
+
+enum ConnectivityCase { CASE_ERROR, CASE_SUCCESS }
+
+class MockConnectivity implements Connectivity {
+  var connectivityCase = ConnectivityCase.CASE_SUCCESS;
+
+  late Stream<ConnectivityResult> _onConnectivityChanged;
+
+  @override
+  Future<ConnectivityResult> checkConnectivity() {
+    if (connectivityCase == ConnectivityCase.CASE_SUCCESS) {
+      return Future.value(ConnectivityResult.wifi);
+    } else {
+      throw Error();
+    }
+  }
+
+  @override
+  Stream<ConnectivityResult> get onConnectivityChanged {
+    if (_onConnectivityChanged == null) {
+      _onConnectivityChanged = Stream<ConnectivityResult>.fromFutures([
+        Future.value(ConnectivityResult.wifi),
+        Future.value(ConnectivityResult.none),
+        Future.value(ConnectivityResult.mobile)
+      ]).asyncMap((data) async {
+        await Future.delayed(const Duration(seconds: 1));
+        return data;
+      });
+    }
+    return _onConnectivityChanged;
+  }
+
+  @override
+  Future<String> getWifiBSSID() {
+    return Future.value("");
+  }
+
+  @override
+  Future<String> getWifiIP() {
+    return Future.value("");
+  }
+
+  @override
+  Future<String> getWifiName() {
+    return Future.value("");
+  }
+}
 
 void main() {
   group('getUser', () {
@@ -57,6 +106,7 @@ void main() {
             'personal_team': true,
             'created_at': '2022-01-01T01:01:01.000Z',
             'updated_at': '2022-01-01T01:01:01.000Z',
+            "team_code": '20TEST10QW',
           }
         ];
         return Response(jsonEncode(response), 200);

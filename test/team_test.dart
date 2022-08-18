@@ -22,7 +22,7 @@ void main() {
             json.decode(fixture('team_model.json'));
 
         final result = Team.fromJson(jsonMap);
-
+        
         expect(result, tTeamModel);
       },
     );
