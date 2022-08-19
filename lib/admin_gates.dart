@@ -78,6 +78,7 @@ class _AdminGatesState extends State<AdminGates> {
                         itemBuilder: (context, index) {
                           return Card(
                             elevation: 5,
+                            clipBehavior: Clip.antiAlias,
                             child: Slidable(
                               // Swipe from left to right to open config menu
                               startActionPane: ActionPane(
