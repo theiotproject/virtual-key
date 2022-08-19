@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -196,6 +197,54 @@ void main() {
     });
   });
 
+  group('getTeamCode', () {
+    test('returns String when http response is successful', () async {
+      // Mock the API call to return a json response with http status 200
+      final mockHTTPClient = MockClient((request) async {
+        // Create sample response of the HTTP call
+        final response = "20TEST10QW";
+        return Response(jsonEncode(response), 200);
+      });
+      // Check whether getTeamCode function returns String object
+      expect(
+          await RemoteService().getTeamCode(mockHTTPClient, 1, 1), isA<String>());
+    });
+
+    test('returns null when http response is unsuccessful', () async {
+      // Mock the API call to return an empty json response with http status 404
+      final mockHTTPClient = MockClient((request) async {
+        final response = {};
+        return Response(jsonEncode(response), 404);
+      });
+      // Check whether getTeamCode function returns null
+      expect(await RemoteService().getTeamCode(mockHTTPClient, 1, 1), null);
+    });
+  });
+
+  group('getAdminTeamCode', () {
+    test('returns String when http response is successful', () async {
+      // Mock the API call to return a json response with http status 200
+      final mockHTTPClient = MockClient((request) async {
+        // Create sample response of the HTTP call
+        final response = "20TEST10QW";
+        return Response(jsonEncode(response), 200);
+      });
+      // Check whether getAdminTeamCode function returns String object
+      expect(
+          await RemoteService().getAdminTeamCode(mockHTTPClient, 1), isA<String>());
+    });
+
+    test('returns null when http response is unsuccessful', () async {
+      // Mock the API call to return an empty json response with http status 404
+      final mockHTTPClient = MockClient((request) async {
+        final response = {};
+        return Response(jsonEncode(response), 404);
+      });
+      // Check whether getAdminTeamCode function returns null
+      expect(await RemoteService().getAdminTeamCode(mockHTTPClient, 1), null);
+    });
+  });
+
   group('checkAdmin', () {
     test('returns String when http response is successful', () async {
       // Mock the API call to return a json response with http status 200
@@ -204,7 +253,7 @@ void main() {
         final response = "1";
         return Response(jsonEncode(response), 200);
       });
-      // Check whether checkAdmin function returns User object
+      // Check whether checkAdmin function returns String object
       expect(
           await RemoteService().checkAdmin(mockHTTPClient, 1), isA<String>());
     });
