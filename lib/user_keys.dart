@@ -42,7 +42,7 @@ class _UserKeysState extends State<UserKeys> {
       setState(() {
         isLoaded = true;
       });
-      if(keys!.isEmpty) {
+      if (keys!.isEmpty) {
         isListEmpty = true;
       }
     }
@@ -118,79 +118,89 @@ class _UserKeysState extends State<UserKeys> {
                   replacement: const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  child: isListEmpty ? const EmptyListText(title: 'There are no keys assigned to you') : Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: keys?.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 5,
-                            child: Slidable(
-                              // Swipe from left to right to show remote openning button
-                              startActionPane: ActionPane(
-                                motion: const ScrollMotion(),
-                                extentRatio: 0.2,
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (context) async {
-                                      // Open gate remotely when internet connection is available
-                                      var internetConnection = await Connectivity().checkConnectivity();
-                                      if (internetConnection !=
-                                          ConnectivityResult.none) {
-                                        String uuid = const Uuid().v1();
-                                        String validDays =
-                                            keys![index].validDays;
+                  child: isListEmpty
+                      ? const EmptyListText(
+                          title: 'There are no keys assigned to you')
+                      : Expanded(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(16),
+                              itemCount: keys?.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  elevation: 5,
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Slidable(
+                                    // Swipe from left to right to show remote openning button
+                                    startActionPane: ActionPane(
+                                      motion: const ScrollMotion(),
+                                      extentRatio: 0.2,
+                                      children: [
+                                        SlidableAction(
+                                          onPressed: (context) async {
+                                            // Open gate remotely when internet connection is available
+                                            var internetConnection =
+                                                await Connectivity()
+                                                    .checkConnectivity();
+                                            if (internetConnection !=
+                                                ConnectivityResult.none) {
+                                              String uuid = const Uuid().v1();
+                                              String validDays =
+                                                  keys![index].validDays;
 
-                                        bool accessGranted =
-                                            isValidDay(validDays);
+                                              bool accessGranted =
+                                                  isValidDay(validDays);
 
-                                        if (accessGranted) {
-                                          getKeyGates(keys![index].id)
-                                              .then((value) {
-                                            if(keyGates!.length > 1) {
-                                              showGatesAlertDialog(context);
-                                            } else {
-                                              openGateRemotely(keyGates![0].serialNumber);
+                                              if (accessGranted) {
+                                                getKeyGates(keys![index].id)
+                                                    .then((value) {
+                                                  if (keyGates!.length > 1) {
+                                                    showGatesAlertDialog(
+                                                        context);
+                                                  } else {
+                                                    openGateRemotely(
+                                                        keyGates![0]
+                                                            .serialNumber);
+                                                  }
+                                                });
+                                              }
+
+                                              sendEvent(uuid, keys![index].id,
+                                                  accessGranted);
                                             }
-                                          });
-                                        }
-
-                                        sendEvent(uuid, keys![index].id,
-                                            accessGranted);
-                                      }
-                                    },
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.wifi,
-                                  ),
-                                ],
-                              ),
-                              child: ListTile(
-                                title: Text(
-                                  keys![index].label,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                onTap: () {
-                                  selectedKeyId = keys![index].id;
-                                  Navigator.pushNamed(context, '/key_code',
-                                      arguments: {
-                                        "label": keys![index].label,
-                                        "is_valid_day": isValidDay(
-                                          keys![index].validDays,
+                                          },
+                                          backgroundColor: Colors.blue,
+                                          foregroundColor: Colors.white,
+                                          icon: Icons.wifi,
                                         ),
-                                      });
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
+                                      ],
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        keys![index].label,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        selectedKeyId = keys![index].id;
+                                        Navigator.pushNamed(
+                                            context, '/key_code',
+                                            arguments: {
+                                              "label": keys![index].label,
+                                              "is_valid_day": isValidDay(
+                                                keys![index].validDays,
+                                              ),
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
                 ),
         ],
       ),
