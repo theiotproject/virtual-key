@@ -97,11 +97,13 @@ class _KeyCodeState extends State<KeyCode> {
   generateCodeData(bool isValid) {
     int? virtualKeyId = selectedKeyId;
     String uuid = const Uuid().v1();
-    String validFrom = DateTime.now().toString().substring(0, 19);
-    String validTo = DateTime.now()
-        .add(const Duration(minutes: 1))
-        .toString()
-        .substring(0, 19);
+
+    int unixFrom = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+    int unixTo = (DateTime.now()
+        .add(const Duration(minutes: 1)).millisecondsSinceEpoch / 1000).floor();
+
+    String validFrom = unixFrom.toString();
+    String validTo = unixTo.toString();
 
     String gNum = '';
     gatesNumbers.asMap().forEach((index, element) {
