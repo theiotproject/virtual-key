@@ -1,10 +1,12 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/globals.dart';
 import 'package:http/http.dart' as http;
 import 'package:virtual_key/widgets/custom_appbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -101,6 +103,28 @@ class _LoginState extends State<Login> {
                   fontSize: 16,
                   color: Colors.red,
                 ),
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'No account? ',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  TextSpan(
+                    text: 'Sign up',
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        Uri url = Uri.parse(
+                            'https://keymanager.theiotproject.com/register');
+                        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                          throw 'Could not launch $url';
+                        }
+                      },
+                  ),
+                ],
               ),
             ),
             Align(
