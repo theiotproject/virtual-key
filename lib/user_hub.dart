@@ -21,16 +21,6 @@ class _UserHubState extends State<UserHub> {
   void onTappedBar(int index) {
     setState(() {
       if (index == 2) {
-        /*
-        isLogged = false;
-        token = '';
-        user = null;
-
-        deleteTokenFromStorage();
-        deleteCachedData();
-
-        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-        */
         showLogOutAlertDialog(context);
       } else {
         currentIndex = index;
