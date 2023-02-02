@@ -149,6 +149,7 @@ class _UserKeysState extends State<UserKeys> {
                                       var internetConnection =
                                           await Connectivity()
                                               .checkConnectivity();
+
                                       if (internetConnection !=
                                           ConnectivityResult.none) {
                                         String uuid = const Uuid().v1();
@@ -172,6 +173,8 @@ class _UserKeysState extends State<UserKeys> {
 
                                         sendEvent(uuid, keys![index].id,
                                             accessGranted);
+                                      } else {
+                                        showNoWifiSnackbar(context);
                                       }
 
                                       // don't dismiss widget
@@ -262,6 +265,28 @@ class _UserKeysState extends State<UserKeys> {
     ).then((valueFromDialog) {
       openGateRemotely(valueFromDialog);
     });
-    ;
+  }
+
+  void showNoWifiSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.blue,
+        elevation: 6.0,
+        behavior: SnackBarBehavior.floating,
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: const [
+            Icon(
+              Icons.wifi_off,
+              color: Colors.white,
+            ),
+            Text("You don't have internet access",
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
   }
 }
