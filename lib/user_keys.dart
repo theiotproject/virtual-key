@@ -130,51 +130,56 @@ class _UserKeysState extends State<UserKeys> {
                                 return Card(
                                   elevation: 5,
                                   clipBehavior: Clip.antiAlias,
-                                  child: Slidable(
-                                    // Swipe from left to right to show remote openning button
-                                    startActionPane: ActionPane(
-                                      motion: const ScrollMotion(),
-                                      extentRatio: 0.2,
-                                      children: [
-                                        SlidableAction(
-                                          onPressed: (context) async {
-                                            // Open gate remotely when internet connection is available
-                                            var internetConnection =
-                                                await Connectivity()
-                                                    .checkConnectivity();
-                                            if (internetConnection !=
-                                                ConnectivityResult.none) {
-                                              String uuid = const Uuid().v1();
-                                              String validDays =
-                                                  keys![index].validDays;
-
-                                              bool accessGranted =
-                                                  isValidDay(validDays);
-
-                                              if (accessGranted) {
-                                                getKeyGates(keys![index].id)
-                                                    .then((value) {
-                                                  if (keyGates!.length > 1) {
-                                                    showGatesAlertDialog(
-                                                        context);
-                                                  } else {
-                                                    openGateRemotely(
-                                                        keyGates![0]
-                                                            .serialNumber);
-                                                  }
-                                                });
-                                              }
-
-                                              sendEvent(uuid, keys![index].id,
-                                                  accessGranted);
-                                            }
-                                          },
-                                          backgroundColor: Colors.blue,
-                                          foregroundColor: Colors.white,
-                                          icon: Icons.wifi,
+                                  child: Dismissible(
+                                    background: Container(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 24.0),
+                                        child: Icon(
+                                          Icons.wifi,
+                                          color: Colors.blue,
                                         ),
-                                      ],
+                                      ),
                                     ),
+                                    key: ValueKey<int>(keys![index].id),
+                                    confirmDismiss:
+                                        (DismissDirection direction) async {
+                                      // Open gate remotely when internet connection is available
+                                      var internetConnection =
+                                          await Connectivity()
+                                              .checkConnectivity();
+
+                                      if (internetConnection !=
+                                          ConnectivityResult.none) {
+                                        String uuid = const Uuid().v1();
+                                        String validDays =
+                                            keys![index].validDays;
+
+                                        bool accessGranted =
+                                            isValidDay(validDays);
+
+                                        if (accessGranted) {
+                                          getKeyGates(keys![index].id)
+                                              .then((value) {
+                                            if (keyGates!.length > 1) {
+                                              showGatesAlertDialog(context);
+                                            } else {
+                                              openGateRemotely(
+                                                  keyGates![0].serialNumber);
+                                            }
+                                          });
+                                        }
+
+                                        sendEvent(uuid, keys![index].id,
+                                            accessGranted);
+                                      } else {
+                                        showNoWifiSnackbar(context);
+                                      }
+
+                                      // don't dismiss widget
+                                      return false;
+                                    },
                                     child: ListTile(
                                       title: Text(
                                         keys![index].label,
@@ -260,6 +265,28 @@ class _UserKeysState extends State<UserKeys> {
     ).then((valueFromDialog) {
       openGateRemotely(valueFromDialog);
     });
-    ;
+  }
+
+  void showNoWifiSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.blue,
+        elevation: 6.0,
+        behavior: SnackBarBehavior.floating,
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: const [
+            Icon(
+              Icons.wifi_off,
+              color: Colors.white,
+            ),
+            Text("You don't have internet access",
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
   }
 }
