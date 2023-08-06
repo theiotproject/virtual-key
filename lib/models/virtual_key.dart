@@ -14,6 +14,8 @@ class VirtualKey {
     required this.validDays,
     required this.createdAt,
     required this.updatedAt,
+    required this.teamId,
+    required this.teamName,
   });
 
   int id;
@@ -22,6 +24,8 @@ class VirtualKey {
   String validDays;
   DateTime createdAt;
   DateTime updatedAt;
+  int teamId;
+  String teamName;
 
   @override
   bool operator ==(Object other) => other is VirtualKey && other.label == label;
@@ -36,6 +40,8 @@ class VirtualKey {
         validDays: json["valid_days"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        teamId: json["teamId"],
+        teamName: json["teamName"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +51,7 @@ class VirtualKey {
         "valid_days": validDays,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
+        "teamId": teamId,
+        "teamName": teamName,
       };
 }

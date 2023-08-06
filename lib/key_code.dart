@@ -13,6 +13,7 @@ import 'package:virtual_key/services/remote_service.dart';
 import 'package:virtual_key/widgets/custom_appbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:virtual_key/widgets/no_cache_and_internet_msg.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 class KeyCode extends StatefulWidget {
   const KeyCode({Key? key}) : super(key: key);
@@ -38,6 +39,9 @@ class _KeyCodeState extends State<KeyCode> {
   String now = DateTime.now().toString().substring(0, 19);
   String qrData = '';
 
+  double _initialBrightness = 1.0;
+  double _brightnessValue = 1.0;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +49,12 @@ class _KeyCodeState extends State<KeyCode> {
     //fetch data from API
     getData();
     startTimer();
+
+    getInitialBrightness().then((value) {
+      _initialBrightness = value;
+    });
+
+    setBrightnessTo100();
   }
 
   getData() async {
@@ -99,8 +109,10 @@ class _KeyCodeState extends State<KeyCode> {
     String uuid = const Uuid().v1();
 
     int unixFrom = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
-    int unixTo = (DateTime.now()
-        .add(const Duration(minutes: 1)).millisecondsSinceEpoch / 1000).floor();
+    int unixTo =
+        (DateTime.now().add(const Duration(minutes: 1)).millisecondsSinceEpoch /
+                1000)
+            .floor();
 
     String validFrom = unixFrom.toString();
     String validTo = unixTo.toString();
@@ -155,6 +167,48 @@ class _KeyCodeState extends State<KeyCode> {
     };
 
     return days[weekday];
+  }
+
+  @override
+  void dispose() {
+    resetBrightness();
+    super.dispose();
+  }
+
+  Future<double> getInitialBrightness() async {
+    try {
+      ScreenBrightness screenBrightness = ScreenBrightness();
+      double brightness = await screenBrightness.current;
+      return brightness;
+    } catch (e) {
+      print('error getting screen brightness: $e');
+      return 1.0;
+    }
+  }
+
+  setBrightnessTo100() async {
+    try {
+      ScreenBrightness screenBrightness = ScreenBrightness();
+      double brightness = await screenBrightness.current;
+
+      if (brightness < 1.0) {
+        await screenBrightness.setScreenBrightness(1.0);
+        setState(() {
+          _brightnessValue = 1.0;
+        });
+      }
+    } catch (e) {
+      print('error setting screen brightness: $e');
+    }
+  }
+
+  resetBrightness() async {
+    try {
+      await ScreenBrightness().resetScreenBrightness();
+    } catch (e) {
+      print(e);
+      throw 'Failed to reset brightness';
+    }
   }
 
   @override
