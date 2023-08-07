@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:virtual_key/globals.dart';
@@ -165,6 +164,7 @@ class _UserKeysState extends State<UserKeys> {
                                             if (keyGates!.length > 1) {
                                               showGatesAlertDialog(context);
                                             } else {
+                                              selectedTeamId = keys![index].teamId;
                                               openGateRemotely(
                                                   keyGates![0].serialNumber);
                                             }
@@ -271,14 +271,14 @@ class _UserKeysState extends State<UserKeys> {
 
   void showNoWifiSnackbar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         duration: const Duration(seconds: 2),
         backgroundColor: Colors.blue,
         elevation: 6.0,
         behavior: SnackBarBehavior.floating,
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
+          children: [
             Icon(
               Icons.wifi_off,
               color: Colors.white,
