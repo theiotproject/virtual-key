@@ -21,37 +21,7 @@ class _UserHubState extends State<UserHub> {
   void onTappedBar(int index) {
     setState(() {
       if (index == 2) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Logout'),
-              content: Text('Are you sure you want to logout?'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text('Logout'),
-                  onPressed: () {
-                    isLogged = false;
-                    token = '';
-                    user = null;
-
-                    deleteTokenFromStorage();
-                    deleteCachedData();
-
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/', (_) => false);
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        showLogOutAlertDialog(context);
       } else {
         currentIndex = index;
       }
@@ -97,6 +67,44 @@ class _UserHubState extends State<UserHub> {
           ],
         ),
       ),
+    );
+  }
+
+  void showLogOutAlertDialog(BuildContext context) {
+
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () => Navigator.pop(context),
+    );
+
+    Widget continueButton = TextButton(
+      child: Text("Log out"),
+      onPressed:  () {
+        isLogged = false;
+        token = '';
+        user = null;
+
+        deleteTokenFromStorage();
+        deleteCachedData();
+
+        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Log Out"),
+      content: Text("Are you sure you want to log out?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
