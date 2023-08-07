@@ -11,6 +11,8 @@ void main() {
     validDays: 'MFS',
     createdAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
     updatedAt: DateTime.parse('2022-01-01T01:01:01.000000Z'),
+    teamId: 1,
+    teamName: "test",
   );
 
   group('fromJson', () {

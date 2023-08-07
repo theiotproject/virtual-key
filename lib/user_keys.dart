@@ -37,7 +37,7 @@ class _UserKeysState extends State<UserKeys> {
   }
 
   getData() async {
-    keys = await RemoteService().getKeys(http.Client(), selectedTeamId);
+    keys = await RemoteService().getKeys(http.Client(), user!.id);
     if (keys != null) {
       setState(() {
         isLoaded = true;
@@ -46,10 +46,11 @@ class _UserKeysState extends State<UserKeys> {
         isListEmpty = true;
       }
     }
+    final userId = user!.id;
     // check if data is cached
     var internetConnection = await Connectivity().checkConnectivity();
     if (internetConnection == ConnectivityResult.none) {
-      String fileName = "keys${selectedTeamId}Path.json";
+      String fileName = "keys${userId}Path.json";
       var dir = await getTemporaryDirectory();
       File file = File('${dir.path}/${fileName}');
       if (!file.existsSync()) {
@@ -105,9 +106,8 @@ class _UserKeysState extends State<UserKeys> {
 
   @override
   Widget build(BuildContext context) {
-    Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
     return Scaffold(
-      appBar: CustomAppBar('${arguments['name']} keys', true),
+      appBar: CustomAppBar('Virtual Keys', false),
       body: Column(
         children: [
           const Divider(),
@@ -186,12 +186,14 @@ class _UserKeysState extends State<UserKeys> {
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                          fontSize: 24,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      subtitle: Text(keys![index].teamName),
                                       onTap: () {
                                         selectedKeyId = keys![index].id;
+                                        selectedTeamId = keys![index].teamId;
                                         Navigator.pushNamed(
                                             context, '/key_code',
                                             arguments: {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:virtual_key/admin_teams.dart';
-import 'package:virtual_key/user_teams.dart';
+import 'package:virtual_key/user_keys.dart';
 import 'package:virtual_key/globals.dart';
 
 class UserHub extends StatefulWidget {
@@ -16,7 +16,7 @@ class _UserHubState extends State<UserHub> {
   final storage = const FlutterSecureStorage();
 
   int currentIndex = 1;
-  final List<Widget> children = const [AdminTeams(), UserTeams()];
+  final List<Widget> children = const [AdminTeams(), UserKeys()];
 
   void onTappedBar(int index) {
     setState(() {
@@ -33,10 +33,9 @@ class _UserHubState extends State<UserHub> {
   }
 
   Future<void> deleteCachedData() async {
-      var dir = await getTemporaryDirectory();
-        dir.deleteSync(recursive: true);
+    var dir = await getTemporaryDirectory();
+    dir.deleteSync(recursive: true);
   }
-
 
   @override
   Widget build(BuildContext context) {

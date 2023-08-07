@@ -10,7 +10,6 @@ import 'package:virtual_key/login.dart';
 import 'package:virtual_key/splash_screen.dart';
 import 'package:virtual_key/user_hub.dart';
 import 'package:virtual_key/user_keys.dart';
-import 'package:virtual_key/user_teams.dart';
 import 'package:virtual_key/values/colors.dart';
 
 void main() {
@@ -58,7 +57,6 @@ class MyApp extends StatelessWidget {
         '/admin_gates': (context) => const AdminGates(),
         '/gate_code': (context) => const GateCode(),
         '/config_code': (context) => const ConfigCode(),
-        '/user_teams': (context) => const UserTeams(),
         '/user_keys': (context) => const UserKeys(),
         '/key_code': (context) => const KeyCode()
       },

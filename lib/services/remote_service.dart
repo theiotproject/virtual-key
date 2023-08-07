@@ -83,16 +83,16 @@ class RemoteService {
     }
   }
 
-  Future<List<VirtualKey>?> getKeys(http.Client client, teamId) async {
-    String fileName = "keys${teamId}Path.json";
+  Future<List<VirtualKey>?> getKeys(http.Client client, userId) async {
+    String fileName = "keys${userId}Path.json";
     var dir = await getTemporaryDirectory();
     File file = File('${dir.path}/${fileName}');
 
     var internetConnection = await Connectivity().checkConnectivity();
-    if (internetConnection != ConnectivityResult.none) {
+      if (internetConnection != ConnectivityResult.none) {
       print('fetch from api');
       Uri uri = Uri.parse(
-          'https://keymanager.theiotproject.com/api/virtualKeys/teamId/${teamId}/token');
+          'https://keymanager.theiotproject.com/api/getVirtualKeysByUser/${userId}');
       http.Response response = await client.get(uri, headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -101,11 +101,10 @@ class RemoteService {
 
       if (response.statusCode == 200) {
         String json = response.body;
-
         file.writeAsStringSync(json, flush: true, mode: FileMode.write);
         return virtualKeyFromJson(json);
       }
-    } else if (file.existsSync()) {
+    } else if(file.existsSync()) {
       print('reading from cache');
 
       final data = file.readAsStringSync();
